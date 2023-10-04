@@ -1,0 +1,14 @@
+query PointsWithSpace {
+    points {
+        edges {
+            node {
+                id
+                name
+                space {
+                    id
+                    name
+                }
+            }
+        }
+    }
+}

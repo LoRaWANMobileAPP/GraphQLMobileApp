@@ -1,0 +1,1322 @@
+directive @cacheControl(
+  maxAge: Int
+  scope: CacheControlScope
+  inheritMaxAge: Boolean
+) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+type PageInfo {
+  startCursor: Cursor
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  endCursor: Cursor
+}
+
+# Cursor scalar is an opaque string (base64 format)
+scalar Cursor
+
+type BooleanPayload {
+  success: Boolean!
+}
+
+type Price {
+  # All amounts are in a currency's smallest unit. i.e in cent
+  amount: Float
+  currency: String
+  trialDays: Int
+  name: String
+
+  # This is the unique plan price id used for subscription
+  id: PlanPriceIds
+}
+
+# Plans Pricing enum (Active & Deprecated)
+enum PlanPriceIds {
+  BASIC_FREE
+  STAR_MONTHLY
+  STARTER_MONTHLY
+  STARTER_ANNUALLY
+  MEDIUM_MONTHLY
+  MEDIUM_ANNUALLY
+  LARGE_MONTHLY
+  LARGE_ANNUALLY
+}
+
+type Feature {
+  name: String!
+  normalizedName: String
+  description: String
+  unit: String
+  min: Int
+  max: Int
+  active: Boolean
+  full: Boolean
+}
+
+type Address {
+  id: ID
+  country: String
+  state: String
+  city: String
+  postalCode: String
+  line: String
+  line2: String
+}
+
+type EmailObject {
+  address: String!
+  primary: Boolean!
+  verified: Boolean!
+}
+
+type ProfileMutations {
+  update(input: UpdateUserInput!): User!
+  updatePassword(input: UpdatePasswordInput!): BooleanPayload!
+}
+
+input UpdateUserInput {
+  firstname: String
+  lastname: String
+}
+
+input UpdatePasswordInput {
+  oldPassword: String!
+  newPassword: String!
+  confirmPassword: String!
+}
+
+type User {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  firstname: String!
+  lastname: String!
+  primaryEmail: String!
+  emails: [EmailObject!]!
+}
+
+# Date ISO string or unix timestamp number. All formats will be converted to ISO 8601 (yyyy-MM-dd'T'HH:mm:ss.SSSZ).
+scalar Timestamp
+
+type VerificationLinkInfo {
+  email: String
+  pincode: String
+}
+
+type AccountMutations {
+  login(input: LoginInput!): Account!
+  register(input: RegisterInput!): BooleanPayload!
+  sendResetPasswordEmail(input: VerifyEmailInput!): BooleanPayload!
+  sendVerificationEmail(input: VerifyEmailInput!): BooleanPayload!
+  verifyAccount(input: VerifyAccountInput!): BooleanPayload!
+  verifyActivationLink(input: VerifyActivationLinkInput!): VerificationLinkInfo!
+  logout: BooleanPayload!
+  resetPassword(input: ResetPasswordInput!): BooleanPayload!
+}
+
+input LoginInput {
+  service: ServiceTypes!
+  params: LoginParamsInput!
+}
+
+# Authentication service types
+enum ServiceTypes {
+  PASSWORD
+  GOOGLE
+  GITHUB
+}
+
+input LoginParamsInput {
+  # token for social services:
+  #     - [GITHUB](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps#1-request-a-users-github-identity): **code**
+  #     - [GOOGLE](https://developers.google.com/identity/protocols/oauth2/openid-connect#sendauthrequest): **id_token**
+  token: String
+
+  # User password (Service: PASSWORD)
+  password: String
+
+  # Primary email of the user (Service: PASSWORD)
+  email: String
+}
+
+input RegisterInput {
+  firstname: String!
+  lastname: String!
+  email: String!
+  password: String!
+}
+
+input VerifyEmailInput {
+  email: String!
+}
+
+input VerifyAccountInput {
+  pincode: String!
+  email: String!
+}
+
+input VerifyActivationLinkInput {
+  token: String!
+}
+
+input ResetPasswordInput {
+  token: String!
+  password: String!
+}
+
+type Account {
+  id: ID!
+  user: User!
+}
+
+type Member {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  email: String!
+  userId: String
+  status: InvitationStatus!
+  role: AppRole!
+  tenant: Tenant!
+  displayName: String!
+  invitedBy: User
+}
+
+# The tenant member invitation status
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+# The App roles for authorization
+enum AppRole {
+  OWNER
+  ADMIN
+  DEVELOPER
+  MEMBER
+  GUEST
+  CUSTOMER
+}
+
+type MemberMutations {
+  invite(input: InviteMemberInput!): Member!
+  accept(input: AcceptMemberInput!): Member!
+  update(input: UpdateMemberInput!): Member!
+  delete(input: DeleteMemberInput!): BooleanPayload!
+}
+
+input InviteMemberInput {
+  email: String
+  role: AppRole!
+}
+
+input AcceptMemberInput {
+  token: String!
+}
+
+input UpdateMemberInput {
+  id: ID
+  role: AppRole!
+}
+
+input DeleteMemberInput {
+  id: ID!
+}
+
+type MqttConfig {
+  url: String
+  port: String
+  hostname: String!
+  username: String!
+  password: String!
+}
+
+type TenantBilling {
+  currentPlanPrice: PlanPriceIds
+}
+
+type TenantSettings {
+  showStatusIcon: Boolean
+  mqtt: MqttConfig
+}
+
+type Tenant {
+  id: String!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  name: String
+  createdBy: String
+  totalSpaces: Int
+  totalPoints: Int
+  settings: TenantSettings
+  billing: TenantBilling
+  members: [Member!]
+  owner: User
+  existingSignalTypes: [String!]
+}
+
+type TenantMutations {
+  create(input: CreateTenantInput!): Tenant
+  update(input: UpdateTenantInput!): Tenant!
+  delete(input: DeleteTenantInput!): Tenant!
+}
+
+input CreateTenantInput {
+  name: String!
+
+  # Will be generated based on name if not provided. Please follow this format "boring-company-1"
+  id: String
+  planPriceId: PlanActivePriceIds!
+  couponId: String
+  cardId: String
+}
+
+# Active Plans Pricing enum
+enum PlanActivePriceIds {
+  BASIC_FREE
+  STAR_MONTHLY
+}
+
+input UpdateTenantInput {
+  id: String!
+  data: UpdateTenantPayloadInput
+}
+
+input UpdateTenantPayloadInput {
+  name: String
+  settings: TenantSettingsInput
+}
+
+input DeleteTenantInput {
+  id: ID!
+}
+
+type Point {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  name: String
+  description: String
+  externalId: String
+  spaceId: ID!
+  metadata: JSONObject!
+  lastActive: Timestamp
+  children(
+    where: PointFilterInput = {}
+    paginate: ConnectionPaginationInput = { first: 20 }
+    sort: SortInput = { field: "id", order: ASC }
+  ): PointsConnection
+  parent: Point
+  space: Space
+  signals(
+    where: SignalFilterInput = {}
+    paginate: ConnectionPaginationInput = { first: 20 }
+    sort: SortInput = { field: "timestamp", order: ASC }
+  ): SignalsConnection
+  existingSignalTypes: [String!]
+  createdBy: User
+}
+
+# The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+scalar JSONObject
+
+input PointFilterInput {
+  _OR: [FilterPointInput!]
+  _AND: [FilterPointInput!]
+  _NOR: [FilterPointInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  name: StringComparisonFilter
+  externalId: StringComparisonFilter
+  spaceId: StringComparisonFilter
+  lastActive: TimestampComparisonFilter
+}
+
+input FilterPointInput {
+  _OR: [FilterPointInput!]
+  _AND: [FilterPointInput!]
+  _NOR: [FilterPointInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  name: StringComparisonFilter
+  externalId: StringComparisonFilter
+  spaceId: StringComparisonFilter
+  lastActive: TimestampComparisonFilter
+}
+
+input StringComparisonFilter {
+  _EQ: String
+  _NE: String
+  _LT: String
+  _LTE: String
+  _GT: String
+  _GTE: String
+}
+
+input TimestampComparisonFilter {
+  _EQ: Timestamp
+  _NE: Timestamp
+  _LT: Timestamp
+  _LTE: Timestamp
+  _GT: Timestamp
+  _GTE: Timestamp
+}
+
+input ConnectionPaginationInput {
+  # Value of first must be within 1-100
+  first: Int
+
+  # Value of last must be within 1-100
+  last: Int
+  after: Cursor
+  before: Cursor
+}
+
+input SortInput {
+  field: String = "id"
+  order: SortDirectionEnum = ASC
+}
+
+# Sorting direction enums
+enum SortDirectionEnum {
+  DESC
+  ASC
+}
+
+input SignalFilterInput {
+  _OR: [FilterSignalInput!]
+  _AND: [FilterSignalInput!]
+  _NOR: [FilterSignalInput!]
+  id: StringComparisonFilter
+  timestamp: TimestampComparisonFilter
+  location: GeoComparisonFilter
+  pointId: StringComparisonFilter
+  parentPointId: StringComparisonFilter
+  type: StringComparisonFilter
+  unit: EnumSignalUnitComparisonFilter
+  data: SignalDataComparisonFilter
+}
+
+input FilterSignalInput {
+  _OR: [FilterSignalInput!]
+  _AND: [FilterSignalInput!]
+  _NOR: [FilterSignalInput!]
+  id: StringComparisonFilter
+  timestamp: TimestampComparisonFilter
+  location: GeoComparisonFilter
+  pointId: StringComparisonFilter
+  parentPointId: StringComparisonFilter
+  type: StringComparisonFilter
+  unit: EnumSignalUnitComparisonFilter
+  data: SignalDataComparisonFilter
+}
+
+input GeoComparisonFilter {
+  # Format: ( ( x , y ) , r )
+  _WITHIN_CIRCLE: GeoCircle
+
+  # Format: ( ( x1 , y1 ) , ... , ( xn , yn ) )
+  _WITHIN_POLYGONE: GeoPolygone
+}
+
+# GeoCircle scalar format: ( ( x , y ) , r ). Parentheses are optional.
+scalar GeoCircle
+
+# GeoPolygone scalar format: ( ( x1 , y1 ) , ... , ( xn , yn ) ). Parentheses are optional.
+scalar GeoPolygone
+
+input EnumSignalUnitComparisonFilter {
+  _EQ: UnitType
+  _NE: UnitType
+}
+
+# unit type enum
+enum UnitType {
+  CELSIUS_DEGREES
+  FAHRENHEIT_DEGREES
+  KELVINS
+  DECIBELS
+  BEATS_PER_MINUTE
+  LATITUDE_DEGREES
+  LONGITUDE_DEGREES
+  METERS_PER_SECOND
+  KILOMETERS_PER_HOUR
+  METERS_PER_SECOND_SQUARED
+  METERS
+  KILOMETERS
+  CENTIMETERS
+  MILLIMETERS
+  SECONDS
+  MILLISECONDS
+  BITS
+  BITS_PER_SECOND
+  GRAMS
+  KILOGRAMS
+  LITERS
+  CUBIC_METERS
+  CUBIC_METERS_PER_SECOND
+  CUBIC_METERS_PER_HOUR
+  LITERS_PER_SECOND
+  LITERS_PER_HOUR
+  KILOGRAMS_PER_HOUR
+  GRAMS_PER_CUBIC_METER
+  PASCAL
+  AMPERES
+  MILLIAMPERES
+  VOLTS
+  MILLIVOLTS
+  LUX
+  NTU
+  GENERIC
+  DEGREES
+  PERCENTS
+  UNKNOWN
+}
+
+input SignalDataComparisonFilter {
+  numericValue: NumberComparisonFilter
+  rawValue: StringComparisonFilter
+}
+
+input NumberComparisonFilter {
+  _EQ: Float
+  _NE: Float
+  _LT: Float
+  _LTE: Float
+  _GT: Float
+  _GTE: Float
+}
+
+type PointEdge {
+  node: Point!
+  cursor: Cursor!
+}
+
+type PointsConnection {
+  edges: [PointEdge!]
+  nodes: [Point!]
+  pageInfo: PageInfo
+}
+
+type PointMutations {
+  create(input: CreatePointInput!): Point!
+  command(input: PointCommandInput!): BooleanPayload!
+
+  # You can delete by point ID field
+  delete(input: DeletePointInput!): Point!
+  update(input: UpdatePointInput!): Point!
+}
+
+input CreatePointInput {
+  name: String
+  description: String
+  externalId: String
+  spaceId: ID!
+  parentId: ID
+
+  # Empty object { } by default
+  metadata: JSONObject
+}
+
+input PointCommandInput {
+  pointId: ID!
+  type: PointCommandType!
+  retain: Boolean
+}
+
+# Point command type enum
+enum PointCommandType {
+  METADATA
+}
+
+input DeletePointInput {
+  id: ID!
+}
+
+input UpdatePointInput {
+  id: ID!
+  point: UpdatePointDataInput!
+}
+
+input UpdatePointDataInput {
+  name: String
+  description: String
+  externalId: String
+  spaceId: ID
+  parentId: ID
+
+  # Empty object { } by default
+  metadata: JSONObject
+}
+
+type Space {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  name: String!
+  normalizedName: String!
+  metadata: JSONObject!
+  children(
+    where: SpaceFilterInput = {}
+    paginate: ConnectionPaginationInput = { first: 20 }
+    sort: SortInput = { field: "id", order: ASC }
+  ): SpacesConnection
+  points(
+    where: PointFilterInput = {}
+    paginate: ConnectionPaginationInput = { first: 20 }
+    sort: SortInput = { field: "id", order: ASC }
+  ): PointsConnection
+  parent: Space
+  createdBy: User
+}
+
+input SpaceFilterInput {
+  _OR: [FilterSpaceInput!]
+  _AND: [FilterSpaceInput!]
+  _NOR: [FilterSpaceInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  name: StringComparisonFilter
+  normalizedName: StringComparisonFilter
+}
+
+input FilterSpaceInput {
+  _OR: [FilterSpaceInput!]
+  _AND: [FilterSpaceInput!]
+  _NOR: [FilterSpaceInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  name: StringComparisonFilter
+  normalizedName: StringComparisonFilter
+}
+
+type SpaceEdge {
+  node: Space!
+  cursor: Cursor!
+}
+
+type SpacesConnection {
+  edges: [SpaceEdge!]
+  nodes: [Space!]
+  pageInfo: PageInfo
+}
+
+type SpaceMutations {
+  create(input: CreateSpaceInput!): Space!
+  update(input: UpdateSpaceInput!): Space!
+  delete(input: DeleteSpaceInput!): Space!
+}
+
+input CreateSpaceInput {
+  name: String!
+  parentId: ID
+
+  # Empty object { } by default
+  metadata: JSONObject
+}
+
+input UpdateSpaceInput {
+  id: ID!
+  data: UpdateSpaceDataInput!
+}
+
+input UpdateSpaceDataInput {
+  name: String
+  parentId: ID
+
+  # Empty object { } by default
+  metadata: JSONObject
+}
+
+input DeleteSpaceInput {
+  id: ID!
+}
+
+type SignalData {
+  numericValue: Float
+  rawValue: String!
+}
+
+type SignalLocation {
+  lat: Float!
+  lon: Float!
+}
+
+type Signal {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  timestamp: Timestamp
+  location: SignalLocation
+  pointId: ID!
+  parentPointId: ID
+  metadata: JSONObject!
+  point: Point!
+  parentPoint: Point
+  type: String!
+  unit: UnitType!
+  data: SignalData!
+}
+
+type SignalEdge {
+  node: Signal!
+  cursor: Cursor!
+}
+
+type SignalsConnection {
+  edges: [SignalEdge!]
+  nodes: [Signal!]
+  pageInfo: PageInfo
+}
+
+type SignalsAggregation {
+  # the bucket's start time
+  time: Timestamp
+  min: Float
+
+  # the timestamp of the min value
+  minTime: Timestamp
+  max: Float
+
+  # the timestamp of the max value
+  maxTime: Timestamp
+  avg: Float
+  sum: Float
+  count: Float
+}
+
+type SignalMutations {
+  create(input: CreateSignalInput!): [Signal!]
+}
+
+input CreateSignalInput {
+  # Either pointId or pointExternalId should be provided. if both, only pointId will be considered
+  pointId: ID
+  pointExternalId: String
+
+  # Either parentPointId or parentPointExternalId should be provided. if both, only parentPointId will be considered
+  parentPointId: ID
+  parentPointExternalId: String
+  signals: [SignalDataInput!]!
+}
+
+input SignalDataInput {
+  value: String!
+  unit: UnitType = UNKNOWN
+  type: String!
+  timestamp: Timestamp
+  location: SignalLocationInput
+
+  # Empty object { } by default
+  metadata: JSONObject
+}
+
+input SignalLocationInput {
+  lat: Float!
+  lon: Float!
+}
+
+type Webhook {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  name: String!
+  endpoint: String!
+  requestType: WebhookHttpVerbEnum!
+  entityType: WebhookEntityEnum!
+  eventType: WebhookCrudEnum!
+  active: Boolean!
+  auth: AuthTypeUnion!
+}
+
+# The name tells it all. All available HTTP verbs for a webhook request
+enum WebhookHttpVerbEnum {
+  POST
+  GET
+  PUT
+  DELETE
+  PATCH
+}
+
+# Enum for all possible webhook event resources. This enum defines which resource type should be push to webhook. default All
+enum WebhookEntityEnum {
+  ALL
+  SIGNAL
+  POINT
+  SPACE
+}
+
+# Webhook filter resource enums
+enum WebhookCrudEnum {
+  UPDATE
+  DELETE
+  CREATE
+  ALL
+}
+
+union AuthTypeUnion = AuthApiKey | AuthOAuth2 | AuthToken | AuthBasic | AuthNone
+
+type AuthApiKey implements WebhookAuthType {
+  type: WebhookAuthEnum!
+  key: String!
+  value: String!
+  addTo: WebhookApiKeyFieldEnum!
+}
+
+interface WebhookAuthType {
+  type: WebhookAuthEnum!
+}
+
+# webhook auth types
+enum WebhookAuthEnum {
+  NONE
+  BASIC
+  API_KEY
+  TOKEN
+  OAUTH_2
+}
+
+# Webhook filter resource enums
+enum WebhookApiKeyFieldEnum {
+  HEADER
+  QUERY_STRING
+}
+
+type AuthOAuth2 implements WebhookAuthType {
+  type: WebhookAuthEnum!
+  token: String!
+  addTo: WebhookApiKeyFieldEnum!
+}
+
+type AuthToken implements WebhookAuthType {
+  type: WebhookAuthEnum!
+  token: String!
+}
+
+type AuthBasic implements WebhookAuthType {
+  type: WebhookAuthEnum!
+  username: String!
+  password: String!
+}
+
+type AuthNone implements WebhookAuthType {
+  type: WebhookAuthEnum!
+}
+
+type WebhookMutations {
+  create(input: CreateWebhookInput!): Webhook!
+  update(input: UpdateWebhookInput!): Webhook!
+  delete(input: DeleteWebhookInput!): Webhook!
+}
+
+input CreateWebhookInput {
+  name: String!
+  endpoint: String!
+  requestType: WebhookHttpVerbEnum!
+  entityType: WebhookEntityEnum = ALL
+  eventType: WebhookCrudEnum = ALL
+  auth: WebhookAuthTypesInput = {}
+}
+
+input WebhookAuthTypesInput {
+  basic: AuthBasicInput
+  oauth2: AuthOAuth2Input
+  token: AuthTokenInput
+  apiKey: AuthApiKeyInput
+}
+
+input AuthBasicInput {
+  username: String!
+  password: String!
+}
+
+input AuthOAuth2Input {
+  token: String!
+  addTo: WebhookApiKeyFieldEnum!
+}
+
+input AuthTokenInput {
+  token: String!
+}
+
+input AuthApiKeyInput {
+  key: String!
+  value: String!
+  addTo: WebhookApiKeyFieldEnum!
+}
+
+input UpdateWebhookInput {
+  id: ID!
+  data: UpdateWebhookDataInput!
+}
+
+input UpdateWebhookDataInput {
+  name: String!
+  endpoint: String!
+  requestType: WebhookHttpVerbEnum!
+  entityType: WebhookEntityEnum = ALL
+  eventType: WebhookCrudEnum = ALL
+  active: Boolean
+  auth: WebhookAuthTypesInput = {}
+}
+
+input DeleteWebhookInput {
+  id: ID!
+}
+
+type Billing {
+  invoice(id: String!): Invoice
+  invoices: [Invoice!]
+  subscription(id: String!, tenantId: String!): TenantSubscription
+  subscriptions(tenantId: String!): [TenantSubscription!]
+}
+
+type BillingMutations {
+  changeSubscription(input: ChangeSubscriptionInput!): TenantSubscription!
+  cancelSubscription: TenantSubscription!
+}
+
+input ChangeSubscriptionInput {
+  planPriceId: PlanActivePriceIds!
+  couponId: String
+}
+
+type Invoice {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  accountCountry: String
+  accountName: String
+  amountDue: Float
+  amountPaid: Float
+  amountRemaining: Float
+  billingReason: String
+  currency: String
+  customerEmail: String
+  customerName: String
+  description: String
+  dueDate: Timestamp
+  endingBalance: Float
+  hostedInvoiceUrl: String
+  invoicePdf: String
+  number: String
+  paid: Boolean
+  receiptNumber: String
+  startingBalance: Float
+  statementDescriptor: String
+  status: InvoiceStatus
+  subtotal: Int
+  tax: Float
+  taxPercent: Float
+  total: Float!
+}
+
+# Invoice status enum
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  UNCOLLECTIBLE
+  VOID
+}
+
+type TenantSubscription {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  status: String!
+  tenantId: String!
+  canceledAt: Timestamp!
+  cancelAt: Timestamp!
+  collectionMethod: String
+  currentPeriodStart: String
+  currentPeriodEnd: String
+  endedAt: Timestamp
+  latestInvoiceId: String
+  startDate: String
+  trialStart: String
+  trialEnd: String
+  customerEmail: String
+  customerName: String
+}
+
+type Card {
+  id: ID
+  name: String!
+  brand: String
+  lastFourDigit: String
+  currency: String
+  isDefault: Boolean
+  address: Address
+  expMonth: Float!
+  expYear: Int!
+}
+
+type CardMutations {
+  create(input: CreateCardInput!): Card!
+  delete(input: DeleteCardInput!): Card!
+  setDefault(id: String!): Card!
+}
+
+input CreateCardInput {
+  name: String!
+  cvc: String!
+  number: String!
+  currency: String
+  address: AddressInput!
+  expMonth: Int!
+  expYear: Int!
+}
+
+input AddressInput {
+  country: String
+  state: String
+  city: String
+  postalCode: String
+  zip: String
+  line: String
+  line2: String
+}
+
+input DeleteCardInput {
+  id: ID!
+}
+
+type Plan {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+
+  # The name of the plan
+  name: String!
+
+  # NormalizedName is a special field and a unique identifier of an entity. You can also call it a foreign key
+  normalizedName: String!
+  prices: [Price!]
+  features: [Feature!]
+
+  # Flag to tell if the plan you added is free
+  free: Boolean
+
+  # Flag to tell if the plan is still active and valid
+  active: Boolean!
+}
+
+type SensoneoUdpConfig {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  forwardUdpActive: Boolean!
+  forwardUdpIp: String!
+  forwardUdpPort: Int!
+  sendToVolue: Boolean!
+  volueTenant: String!
+  volueSecret: String!
+  volueUrl: String!
+}
+
+type ExternalDataSource {
+  sensoneoUdp: [SensoneoUdpConfig!]
+}
+
+type ExternalDataSourcesMutations {
+  createSensoneoUdp(input: CreateSensoneoUdpConfigInput!): SensoneoUdpConfig!
+  deleteSensoneoUdp(input: DeleteSensoneoUdpConfigInput!): SensoneoUdpConfig!
+}
+
+input CreateSensoneoUdpConfigInput {
+  forwardUdpActive: Boolean!
+  forwardUdpIp: String!
+  forwardUdpPort: Int!
+  sendToVolue: Boolean!
+  volueTenant: String!
+  volueSecret: String!
+  volueUrl: String!
+}
+
+input DeleteSensoneoUdpConfigInput {
+  id: String!
+}
+
+type AccessToken {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  scopes: [AccessTokenScope!]!
+
+  # available only on creation
+  token: String!
+  active: Boolean!
+  name: String!
+  expireAt: Timestamp
+}
+
+# Scope types for access token
+enum AccessTokenScope {
+  CREATE_SPACE
+  READ_SPACE
+  UPDATE_SPACE
+  DELETE_SPACE
+  CREATE_POINT
+  CREATE_POINT_COMMAND
+  READ_POINT
+  UPDATE_POINT
+  DELETE_POINT
+  CREATE_SIGNAL
+  READ_SIGNAL
+  DELETE_SIGNAL
+}
+
+type AccessTokenProtected {
+  id: ID!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  scopes: [AccessTokenScope!]!
+  active: Boolean!
+  name: String!
+  expireAt: Timestamp
+}
+
+type AccessTokenMutations {
+  delete(input: DeleteAccessTokenInput!): AccessTokenProtected!
+  create(input: CreateAccessTokenInput!): AccessToken!
+}
+
+input DeleteAccessTokenInput {
+  id: ID!
+}
+
+input CreateAccessTokenInput {
+  name: String!
+  scopes: [AccessTokenScope!]!
+  expireAt: Timestamp
+}
+
+input MqttConfigInput {
+  url: String
+  port: String
+  hostname: String!
+  username: String!
+  password: String!
+}
+
+input TenantSettingsInput {
+  showStatusIcon: Boolean
+  mqtt: MqttConfigInput
+}
+
+type Query {
+  tenantAvailable(identifier: String!): Boolean!
+  tenant: Tenant
+  tenants(where: TenantFilterInput, paginate: PaginationInput): [Tenant!]
+  point(input: PointFilterInput!): Point
+  points(
+    where: PointFilterInput = {}
+    paginate: ConnectionPaginationInput = { first: 20 }
+    sort: SortInput = { field: "id", order: ASC }
+  ): PointsConnection
+  space(input: SpaceFilterInput!): Space
+  spaces(
+    where: SpaceFilterInput = {}
+    paginate: ConnectionPaginationInput = { first: 20 }
+    sort: SortInput = { field: "id", order: ASC }
+  ): SpacesConnection
+  webhook(id: String!): Webhook
+  webhooks(where: WebhookFilterInput, paginate: PaginationInput): [Webhook!]
+  signals(
+    where: SignalFilterInput = {}
+    paginate: ConnectionPaginationInput = { first: 20 }
+    sort: SortInput = { field: "timestamp", order: ASC }
+  ): SignalsConnection
+  signal(input: SignalFilterWithoutLocationInput!): Signal
+
+  # experimental version, refresh only last 3 months.
+  signalsAggregation(
+    where: SignalsAggregationFilterInput!
+    aggregate: SignalsAggregationAggregateInput!
+  ): [SignalsAggregation!]
+  billing: Billing
+  card(id: String!): Card
+  cards: [Card!]
+  plan(input: ReadPlanInput!): Plan!
+  plans(where: PlanFilterInput = { active: true }): [Plan!]!
+  profile: User!
+  member(id: String!): Member!
+  members(where: MemberFilterInput): [Member!]
+  accessTokens(
+    where: AccessTokenFilterInput
+    paginate: PaginationInput
+  ): [AccessTokenProtected!]
+  accessToken(input: ReadAccessTokenInput!): AccessTokenProtected
+  externalDataSources: ExternalDataSource!
+}
+
+input TenantFilterInput {
+  _OR: [FilterTenantInput!]
+  _AND: [FilterTenantInput!]
+  _NOR: [FilterTenantInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  name: StringComparisonFilter
+}
+
+input FilterTenantInput {
+  _OR: [FilterTenantInput!]
+  _AND: [FilterTenantInput!]
+  _NOR: [FilterTenantInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  name: StringComparisonFilter
+}
+
+input PaginationInput {
+  skip: Int = 0
+  limit: Int = 10
+}
+
+input WebhookFilterInput {
+  _OR: [FilterWebhookInput!]
+  _AND: [FilterWebhookInput!]
+  _NOR: [FilterWebhookInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  name: StringComparisonFilter
+  endpoint: StringComparisonFilter
+  active: BooleanComparisonFilter
+}
+
+input FilterWebhookInput {
+  _OR: [FilterWebhookInput!]
+  _AND: [FilterWebhookInput!]
+  _NOR: [FilterWebhookInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  name: StringComparisonFilter
+  endpoint: StringComparisonFilter
+  active: BooleanComparisonFilter
+}
+
+input BooleanComparisonFilter {
+  _EQ: Boolean
+  _NE: Boolean
+}
+
+input SignalFilterWithoutLocationInput {
+  _OR: [FilterSignalInput!]
+  _AND: [FilterSignalInput!]
+  _NOR: [FilterSignalInput!]
+  id: StringComparisonFilter
+  timestamp: TimestampComparisonFilter
+  pointId: StringComparisonFilter
+  parentPointId: StringComparisonFilter
+  type: StringComparisonFilter
+  unit: EnumSignalUnitComparisonFilter
+  data: SignalDataComparisonFilter
+}
+
+input SignalsAggregationFilterInput {
+  pointId: ID!
+  type: String!
+  unit: UnitType!
+}
+
+input SignalsAggregationAggregateInput {
+  from: Timestamp!
+  to: Timestamp!
+  window: Window
+}
+
+# Aggregation window enums
+enum Window {
+  MINUTE_1
+  MINUTE_5
+  MINUTE_15
+  HOUR_1
+  HOUR_6
+  HOUR_12
+  DAY_1
+  DAY_7
+}
+
+input ReadPlanInput {
+  id: ID!
+}
+
+input PlanFilterInput {
+  active: Boolean = true
+}
+
+input MemberFilterInput {
+  status: InvitationStatus
+  role: AppRole
+  tenantId: String
+}
+
+input AccessTokenFilterInput {
+  _OR: [FilterAccessTokenInput!]
+  _AND: [FilterAccessTokenInput!]
+  _NOR: [FilterAccessTokenInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  active: BooleanComparisonFilter
+  name: StringComparisonFilter
+  expireAt: TimestampComparisonFilter
+}
+
+input FilterAccessTokenInput {
+  _OR: [FilterAccessTokenInput!]
+  _AND: [FilterAccessTokenInput!]
+  _NOR: [FilterAccessTokenInput!]
+  id: StringComparisonFilter
+  createdAt: TimestampComparisonFilter
+  updatedAt: TimestampComparisonFilter
+  active: BooleanComparisonFilter
+  name: StringComparisonFilter
+  expireAt: TimestampComparisonFilter
+}
+
+input ReadAccessTokenInput {
+  id: ID!
+}
+
+type Mutation {
+  account: AccountMutations
+  tenant: TenantMutations!
+  point: PointMutations
+  space: SpaceMutations
+  webhook: WebhookMutations
+  signal: SignalMutations
+  billing: BillingMutations
+  card: CardMutations
+  profile: ProfileMutations
+  member: MemberMutations
+  accessToken: AccessTokenMutations
+  externalDataSource: ExternalDataSourcesMutations
+}
+
+type Subscription {
+  signalAdded(where: SignalSubscriptionFilterInput): Signal!
+}
+
+input SignalSubscriptionFilterInput {
+  pointId: ID
+  parentPointId: ID
+  spaceId: ID
+  type: String
+  unit: UnitType
+  numericValue: Float
+}
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}

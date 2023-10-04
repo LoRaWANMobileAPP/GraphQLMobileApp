@@ -1,0 +1,13 @@
+query Point($id: String!) {
+    point(input: {id: {_EQ: $id}}) {
+        name
+        description
+        space {
+            name
+            parent {
+                name
+            }
+            createdAt
+        }
+    }
+}
