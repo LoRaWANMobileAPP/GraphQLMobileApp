@@ -13,6 +13,7 @@ fun PointsWithSpaceQuery.Points.toSimplePoints(): SimplePoint {
         edges = this.edges?.map { edge ->
             SimpleEdge(
                 node = SimpleNode(
+                    name = edge.node.name!!,
                     space = SimpleSpace(
                         name = edge.node.space?.name,
                         createdAt = edge.node.space?.id

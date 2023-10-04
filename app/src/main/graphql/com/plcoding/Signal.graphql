@@ -1,0 +1,23 @@
+query LATEST_SIGNALS {
+    signals(
+        where:{timestamp:{_GTE:"2021-11-14"}}
+        paginate: { last:1000 }
+    ){
+        edges {
+            node {
+                id
+                timestamp
+                location{
+                    lat
+                    lon}
+                type
+                unit
+                pointId
+                data {
+                    numericValue
+                    rawValue
+                }
+            }
+        }
+    }
+}

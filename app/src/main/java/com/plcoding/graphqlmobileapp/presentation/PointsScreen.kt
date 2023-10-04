@@ -63,7 +63,7 @@ private fun EdgeItem(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = edge.node.space.name?: "No Name",
+                text = edge.node.name?: "No Name",
                 fontSize = 24.sp
             )
             Spacer(modifier = Modifier.width(16.dp))
