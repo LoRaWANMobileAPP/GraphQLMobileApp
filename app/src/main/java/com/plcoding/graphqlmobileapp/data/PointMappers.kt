@@ -17,7 +17,8 @@ fun PointsWithSpaceQuery.Points.toSimplePoints(): SimplePoint {
                     space = SimpleSpace(
                         name = edge.node.space?.name,
                         createdAt = edge.node.space?.id
-                    )
+                    ),
+                    data = null
                 )
             )
         }

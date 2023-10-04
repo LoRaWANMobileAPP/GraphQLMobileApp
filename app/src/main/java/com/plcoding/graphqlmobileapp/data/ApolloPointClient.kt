@@ -1,15 +1,19 @@
 package com.plcoding.graphqlmobileapp.data
 
 import com.apollographql.apollo3.ApolloClient
+import com.plcoding.LatestSignalsByTypeQuery
 import com.plcoding.PointsWithSpaceQuery
 import com.plcoding.graphqlmobileapp.domain.PointClient
+import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
+import com.plcoding.graphqlmobileapp.domain.SimpleSignal
+
 //import com.plcoding.type.PointFilterInput
 //import com.plcoding.type.StringComparisonFilter
 
 class ApolloPointClient(
     private val apolloClient: ApolloClient
-) : PointClient {
+) : PointClient, SignalClient {
     override suspend fun getPoints(): SimplePoint? {
         return try {
             var points = apolloClient
@@ -19,6 +23,21 @@ class ApolloPointClient(
                 ?.points
 
             points?.toSimplePoints()
+        } catch (ex: Exception) {
+            println(ex)
+            null
+        }
+    }
+
+    override suspend fun getSignals(): List<SimpleSignal>? {
+        return try {
+            var signals = apolloClient
+                .query(LatestSignalsByTypeQuery())
+                .execute()
+                .data
+                ?.signals
+
+            listOf(signals?.toSimpleSignals()).filterNotNull()
         } catch (ex: Exception) {
             println(ex)
             null

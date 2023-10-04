@@ -55,7 +55,7 @@ private fun EdgeItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = edge.node.space.name?: "No Name",
+            text = edge.node.space?.name?: "No Name",
             fontSize = 30.sp
         )
         Spacer(modifier = Modifier.width(16.dp))
@@ -68,7 +68,7 @@ private fun EdgeItem(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = edge.node.space.createdAt?: "No Name",
+                text = edge.node.space?.createdAt?: "No Name",
             )
         }
     }
