@@ -35,6 +35,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideSignalClient(apolloClient: ApolloClient): SignalClient {
+        return ApolloPointClient(apolloClient)
+    }
+
+    @Provides
+    @Singleton
     fun providePointsUseCase(pointClient: PointClient): GetPointsUseCase {
         return GetPointsUseCase(pointClient)
     }

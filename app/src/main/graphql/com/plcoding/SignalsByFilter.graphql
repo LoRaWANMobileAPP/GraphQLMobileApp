@@ -1,0 +1,21 @@
+query SignalsByFilter($id: String!, $fromDate: Timestamp!, $toDate: Timestamp!) {
+    signals(
+        where: {
+            _AND:[
+                {pointId: {_EQ: $id}}
+                {timestamp: {_LT: $fromDate}}
+                {timestamp: {_GT: $toDate}}
+            ]
+        }
+    ){
+        edges {
+            node {
+                unit
+                data {
+                    numericValue
+                    rawValue
+                }
+            }
+        }
+    }
+}

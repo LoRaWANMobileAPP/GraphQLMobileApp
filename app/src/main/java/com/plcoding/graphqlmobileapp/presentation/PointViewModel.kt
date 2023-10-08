@@ -1,22 +1,31 @@
 package com.plcoding.graphqlmobileapp.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
+import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.GetPointUseCase
 import com.plcoding.graphqlmobileapp.domain.GetPointsUseCase
+import com.plcoding.graphqlmobileapp.domain.GetSignalUseCase
+import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class PointViewModel @Inject constructor(
     private val getPointsUseCase: GetPointsUseCase,
-    private val getPointUseCase: GetPointUseCase
+    private val getPointUseCase: GetPointUseCase,
+    private val getSignalUseCase: GetSignalUseCase
 ): ViewModel() {
 
     private val _state = MutableStateFlow(PointState())
@@ -36,11 +45,13 @@ class PointViewModel @Inject constructor(
         }
     }
 
-    fun selectPoint(id: String) {
+    fun selectPoint(
+        id: String) {
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    selectedPoint = getPointUseCase.execute(id)
+                    selectedPoint = getPointUseCase.execute(id),
+                    signalList = getSignalUseCase.execute(id)
                 )
             }
         }
@@ -50,7 +61,8 @@ class PointViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    selectedPoint = null
+                    selectedPoint = null,
+                    signalList = emptyList()
                 )
             }
         }
@@ -59,6 +71,7 @@ class PointViewModel @Inject constructor(
     data class PointState(
         val point: SimplePoint? = null,
         val isLoading: Boolean = false,
-        val selectedPoint: DetailedPoint? = null
+        val selectedPoint: DetailedPoint? = null,
+        val signalList: List<DetailedSignalData>? = null
     )
 }
