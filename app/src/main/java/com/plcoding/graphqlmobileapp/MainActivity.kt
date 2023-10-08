@@ -19,7 +19,11 @@ class MainActivity : ComponentActivity() {
             GraphQlMobileAppTheme {
                 val viewModel = hiltViewModel<PointViewModel>()
                 val state by viewModel.state.collectAsState()
-                PointsScreen(state = state)
+                PointsScreen(
+                    state = state,
+                    onSelectPoint = viewModel::selectPoint,
+                    onDismissPointDialog = viewModel::dismissPointDialog
+                )
             }
         }
     }

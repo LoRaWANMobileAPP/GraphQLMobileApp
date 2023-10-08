@@ -2,6 +2,7 @@ package com.plcoding.graphqlmobileapp.di
 
 import com.apollographql.apollo3.ApolloClient
 import com.plcoding.graphqlmobileapp.data.ApolloPointClient
+import com.plcoding.graphqlmobileapp.domain.GetPointUseCase
 import com.plcoding.graphqlmobileapp.domain.GetPointsUseCase
 import com.plcoding.graphqlmobileapp.domain.GetSignalUseCase
 import com.plcoding.graphqlmobileapp.domain.PointClient
@@ -42,5 +43,11 @@ object AppModule {
     @Singleton
     fun provideSignalsUseCase(signalClient: SignalClient): GetSignalUseCase {
         return GetSignalUseCase(signalClient)
+    }
+
+    @Provides
+    @Singleton
+    fun providePointUseCase(pointClient: PointClient): GetPointUseCase {
+        return GetPointUseCase(pointClient)
     }
 }
