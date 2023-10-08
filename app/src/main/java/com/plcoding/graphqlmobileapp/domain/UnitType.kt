@@ -1,0 +1,56 @@
+package com.plcoding.graphqlmobileapp.domain
+enum class UnitType(
+    val rawValue: String
+) {
+    CELSIUS_DEGREES("CELSIUS_DEGREES"),
+    FAHRENHEIT_DEGREES("FAHRENHEIT_DEGREES"),
+    KELVINS("KELVINS"),
+    DECIBELS("DECIBELS"),
+    BEATS_PER_MINUTE("BEATS_PER_MINUTE"),
+    LATITUDE_DEGREES("LATITUDE_DEGREES"),
+    LONGITUDE_DEGREES("LONGITUDE_DEGREES"),
+    METERS_PER_SECOND("METERS_PER_SECOND"),
+    KILOMETERS_PER_HOUR("KILOMETERS_PER_HOUR"),
+    METERS_PER_SECOND_SQUARED("METERS_PER_SECOND_SQUARED"),
+    METERS("METERS"),
+    KILOMETERS("KILOMETERS"),
+    CENTIMETERS("CENTIMETERS"),
+    MILLIMETERS("MILLIMETERS"),
+    SECONDS("SECONDS"),
+    MILLISECONDS("MILLISECONDS"),
+    BITS("BITS"),
+    BITS_PER_SECOND("BITS_PER_SECOND"),
+    GRAMS("GRAMS"),
+    KILOGRAMS("KILOGRAMS"),
+    LITERS("LITERS"),
+    CUBIC_METERS("CUBIC_METERS"),
+    CUBIC_METERS_PER_SECOND("CUBIC_METERS_PER_SECOND"),
+    CUBIC_METERS_PER_HOUR("CUBIC_METERS_PER_HOUR"),
+    LITERS_PER_SECOND("LITERS_PER_SECOND"),
+    LITERS_PER_HOUR("LITERS_PER_HOUR"),
+    KILOGRAMS_PER_HOUR("KILOGRAMS_PER_HOUR"),
+    GRAMS_PER_CUBIC_METER("GRAMS_PER_CUBIC_METER"),
+    PASCAL("PASCAL"),
+    AMPERES("AMPERES"),
+    MILLIAMPERES("MILLIAMPERES"),
+    VOLTS("VOLTS"),
+    MILLIVOLTS("MILLIVOLTS"),
+    LUX("LUX"),
+    NTU("NTU"),
+    GENERIC("GENERIC"),
+    DEGREES("DEGREES"),
+    PERCENTS("PERCENTS"),
+    UNKNOWN("UNKNOWN"),
+
+    /**
+     * Auto generated constant for unknown enum values
+     */
+    UNKNOWN__("UNKNOWN__"),
+    ;
+    public companion object {
+        public fun safeValueOf(rawValue: String): UnitType =
+            UnitType.values()
+                .find { it.rawValue == rawValue }
+                ?: UnitType.UNKNOWN__
+    }
+}

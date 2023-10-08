@@ -1,7 +1,7 @@
 package com.plcoding.graphqlmobileapp.domain
 
 data class SimpleNode(
-    val name: String,
-    val space: SimpleSpace?,
-    val data: SimpleData?
+    val id: String,
+    val name: String?,
+    val description: String?
 )

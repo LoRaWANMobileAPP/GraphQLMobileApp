@@ -1,13 +1,10 @@
 package com.plcoding.graphqlmobileapp.presentation
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
@@ -55,21 +52,8 @@ private fun EdgeItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = edge.node.space?.name?: "No Name",
+            text = edge.node.name?: "No Name",
             fontSize = 30.sp
         )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = edge.node.name?: "No Name",
-                fontSize = 24.sp
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = edge.node.space?.createdAt?: "No Name",
-            )
-        }
     }
 }

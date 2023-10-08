@@ -1,13 +1,34 @@
 query Point($id: String!) {
-    point(input: {id: {_EQ: $id}}) {
-        name
-        description
-        space {
-            name
-            parent {
-                name
+    points(
+        where: {id: {_EQ: $id}}
+    ) {
+        edges {
+            node {
+                signals (
+                    paginate: { last:1 }
+                ) {
+                    edges {
+                        node {
+                            timestamp
+                            location{
+                                lat
+                                lon
+                            }
+                            type
+                            unit
+                            point {
+                                id
+                                name
+                                description
+                            }
+                            data {
+                                numericValue
+                                rawValue
+                            }
+                        }
+                    }
+                }
             }
-            createdAt
         }
     }
 }

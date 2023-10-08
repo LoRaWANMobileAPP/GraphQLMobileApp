@@ -1,12 +1,8 @@
-query LatestSignalsByType {
+query PointSummaryByLatestSignal($pointId: String!) {
     signals(
-        where: {
-            _AND:[
-                {timestamp: {_GT: "2023-10-04T16:45:51.617Z"}}
-                {type: {_EQ: "Temperature"}}
-            ]
-        }
-        paginate: { last:10 }
+        #        where:{pointId: {_EQ: "6505c702f490ba356202544f"}}
+        where:{pointId: {_EQ: $pointId}}
+        paginate: { last:1 }
     ){
         edges {
             node {
@@ -17,7 +13,11 @@ query LatestSignalsByType {
                     lon}
                 type
                 unit
-                pointId
+                point {
+                    id
+                    name
+                    description
+                }
                 data {
                     numericValue
                     rawValue

@@ -11,12 +11,9 @@ fun LatestSignalsByTypeQuery.Signals.toSimpleSignals(): SimpleSignal? {
         edges = this.edges?.map { edge ->
             SimpleEdge(
                 node = SimpleNode(
+                    id = edge.node.id,
                     name = edge.node.type,
-                    data = SimpleData(
-                        numericValue = edge.node.data.numericValue,
-                        rawValue = edge.node.data.rawValue
-                    ),
-                    space = null
+                    description = null
                 )
             )
         }
