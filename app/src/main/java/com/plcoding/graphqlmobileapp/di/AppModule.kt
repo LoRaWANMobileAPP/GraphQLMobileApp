@@ -3,7 +3,9 @@ package com.plcoding.graphqlmobileapp.di
 import com.apollographql.apollo3.ApolloClient
 import com.plcoding.graphqlmobileapp.data.ApolloPointClient
 import com.plcoding.graphqlmobileapp.domain.GetPointsUseCase
+import com.plcoding.graphqlmobileapp.domain.GetSignalUseCase
 import com.plcoding.graphqlmobileapp.domain.PointClient
+import com.plcoding.graphqlmobileapp.domain.SignalClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,5 +36,11 @@ object AppModule {
     @Singleton
     fun providePointsUseCase(pointClient: PointClient): GetPointsUseCase {
         return GetPointsUseCase(pointClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignalsUseCase(signalClient: SignalClient): GetSignalUseCase {
+        return GetSignalUseCase(signalClient)
     }
 }
