@@ -1,20 +1,24 @@
 package com.plcoding.graphqlmobileapp.data
 
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.Optional
+import com.plcoding.GetAggregatedInfoByFilterQuery
 import com.plcoding.PointsQuery
 import com.plcoding.PointQuery
 import com.plcoding.SignalsByFilterQuery
+import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
+import com.plcoding.graphqlmobileapp.domain.AggregationClient
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.PointClient
 import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
+import com.plcoding.type.Window
 import java.sql.Timestamp
-import java.time.LocalDateTime
 
 class ApolloPointClient(
     private val apolloClient: ApolloClient
-) : PointClient, SignalClient
+) : PointClient, SignalClient, AggregationClient
 {
     override suspend fun getPoints(): SimplePoint? {
         return try {
@@ -47,5 +51,16 @@ class ApolloPointClient(
             .data
             ?.signals
         return signals?.toDetailedSignalData()
+    }
+
+    override suspend fun getAggregatedInfo(from: Timestamp, to: Timestamp, id: String, type: String, window: Optional<Window?>): List<AggregatedInfo>? {
+        val ag = apolloClient
+            .query(GetAggregatedInfoByFilterQuery(from, to, id, type, window))
+            .execute()
+            .data
+
+        return ag?.signalsAggregation?.map {
+            it.toAggregatedInfo()
+        }
     }
 }

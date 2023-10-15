@@ -11,6 +11,7 @@ query SignalsByFilter($id: String!, $fromDate: Timestamp!, $toDate: Timestamp!) 
         edges {
             node {
                 unit
+                createdAt
                 data {
                     numericValue
                     rawValue

@@ -1,0 +1,23 @@
+query GetAggregatedInfoByFilter(
+    $from: Timestamp!,
+    $to: Timestamp!,
+    $pointId: ID!,
+    $type: String!,
+    $window: Window) {
+    signalsAggregation(
+        aggregate: {
+            from: $from,
+            to: $to,
+            window: $window
+        }, where: {
+            pointId: $pointId,
+            type: $type,
+            unit: GENERIC
+        }
+    ) {
+        min
+        max
+        avg
+        time
+    }
+}

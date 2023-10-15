@@ -2,6 +2,8 @@ package com.plcoding.graphqlmobileapp.di
 
 import com.apollographql.apollo3.ApolloClient
 import com.plcoding.graphqlmobileapp.data.ApolloPointClient
+import com.plcoding.graphqlmobileapp.domain.AggregationClient
+import com.plcoding.graphqlmobileapp.domain.GetAggregatedInfoUseCase
 import com.plcoding.graphqlmobileapp.domain.GetPointUseCase
 import com.plcoding.graphqlmobileapp.domain.GetPointsUseCase
 import com.plcoding.graphqlmobileapp.domain.GetSignalUseCase
@@ -55,5 +57,11 @@ object AppModule {
     @Singleton
     fun providePointUseCase(pointClient: PointClient): GetPointUseCase {
         return GetPointUseCase(pointClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAggregatedInfo(aggregationClient: AggregationClient): GetAggregatedInfoUseCase {
+        return GetAggregatedInfoUseCase(aggregationClient)
     }
 }

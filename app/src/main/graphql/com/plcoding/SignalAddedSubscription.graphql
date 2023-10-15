@@ -1,0 +1,10 @@
+subscription SignalAddedSubscription($where: SignalSubscriptionFilterInput) {
+    signalAdded(where: $where) {
+        unit
+        createdAt
+        data {
+            rawValue
+            numericValue
+        }
+    }
+}
