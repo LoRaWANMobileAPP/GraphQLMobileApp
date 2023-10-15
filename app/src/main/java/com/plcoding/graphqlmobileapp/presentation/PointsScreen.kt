@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.SignalData
@@ -60,6 +61,7 @@ fun PointsScreen(
                 PointDialog(
                     point = state.selectedPoint,
                     signalList = state.signalList!!,
+                    aggregatedInfo = state.aggregatedInfo,
                     onDismiss = onDismissPointDialog,
                     modifier = Modifier
                         .clip(RoundedCornerShape(5.dp))
@@ -75,6 +77,7 @@ fun PointsScreen(
 private fun PointDialog(
     point: DetailedPoint,
     signalList: List<DetailedSignalData>,
+    aggregatedInfo: AggregatedInfo?,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -101,6 +104,18 @@ private fun PointDialog(
         }
         Spacer(modifier = Modifier.height(16.dp))
         Box(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                if (aggregatedInfo != null) {
+                    items(listOf(aggregatedInfo)){
+                        AggregatedItem(
+                            aggregatedInfo = it,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
+                    }
+                }
+            }
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -150,6 +165,27 @@ private fun SignalItem(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = detailedSignalData.signalData.rawValue,
+            fontSize = 15.sp
+        )
+    }
+}
+
+@Composable
+private fun AggregatedItem(
+    aggregatedInfo: AggregatedInfo,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = aggregatedInfo.max.toString(),
+            fontSize = 15.sp
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = aggregatedInfo.timeOfMax.toString(),
             fontSize = 15.sp
         )
     }

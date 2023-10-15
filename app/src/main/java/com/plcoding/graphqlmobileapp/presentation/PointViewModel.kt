@@ -4,8 +4,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
+import com.plcoding.graphqlmobileapp.domain.GetAggregatedInfoUseCase
 import com.plcoding.graphqlmobileapp.domain.GetPointUseCase
 import com.plcoding.graphqlmobileapp.domain.GetPointsUseCase
 import com.plcoding.graphqlmobileapp.domain.GetSignalUseCase
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class PointViewModel @Inject constructor(
     private val getPointsUseCase: GetPointsUseCase,
     private val getPointUseCase: GetPointUseCase,
-    private val getSignalUseCase: GetSignalUseCase
+    private val getSignalUseCase: GetSignalUseCase,
+    private val getAggregatedInfoUseCase: GetAggregatedInfoUseCase
 ): ViewModel() {
 
     private val _state = MutableStateFlow(PointState())
@@ -49,9 +52,11 @@ class PointViewModel @Inject constructor(
         id: String) {
         viewModelScope.launch {
             _state.update {
+                val signalList = getSignalUseCase.execute(id)
                 it.copy(
                     selectedPoint = getPointUseCase.execute(id),
-                    signalList = getSignalUseCase.execute(id)
+                    signalList = signalList,
+                    aggregatedInfo = getAggregatedInfoUseCase.execute(signalList)
                 )
             }
         }
@@ -72,6 +77,7 @@ class PointViewModel @Inject constructor(
         val point: SimplePoint? = null,
         val isLoading: Boolean = false,
         val selectedPoint: DetailedPoint? = null,
-        val signalList: List<DetailedSignalData>? = null
+        val signalList: List<DetailedSignalData>? = null,
+        val aggregatedInfo: AggregatedInfo? = null
     )
 }

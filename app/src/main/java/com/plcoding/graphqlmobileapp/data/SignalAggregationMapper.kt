@@ -8,6 +8,8 @@ fun GetAggregatedInfoByFilterQuery.SignalsAggregation.toAggregatedInfo(): Aggreg
         min = this.min,
         max = this.max,
         avg = this.avg,
-        time = this.time
+        //TODO values are wrong, unable to fetch data and fill fields correctly
+        timeOfMin = this.time,
+        timeOfMax = this.time
     )
 }

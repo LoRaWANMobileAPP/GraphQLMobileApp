@@ -6,5 +6,4 @@ class GetSignalUseCase(
     suspend fun execute(id: String): List<DetailedSignalData>? {
         return signalClient.getSignals(id)
     }
-
 }

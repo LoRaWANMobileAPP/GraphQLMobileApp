@@ -5,5 +5,5 @@ import com.plcoding.type.Window
 import java.sql.Timestamp
 
 interface AggregationClient {
-    suspend fun getAggregatedInfo(from: Timestamp, to: Timestamp, id: String, type: String, window: Optional<Window?> = Optional.Absent): List<AggregatedInfo>?
+    suspend fun getAggregatedInfo(signals: List<DetailedSignalData>?): AggregatedInfo
 }

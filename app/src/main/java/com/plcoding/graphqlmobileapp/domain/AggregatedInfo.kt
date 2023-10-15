@@ -2,7 +2,8 @@ package com.plcoding.graphqlmobileapp.domain
 
 data class AggregatedInfo(
     val min: Double?,
+    val timeOfMin: Any?,
     val max: Double?,
-    val avg: Double?,
-    val time: Any?
+    val timeOfMax: Any?,
+    val avg: Double?
 )

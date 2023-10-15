@@ -61,7 +61,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAggregatedInfo(aggregationClient: AggregationClient): GetAggregatedInfoUseCase {
+    fun provideAggregationClient(apolloClient: ApolloClient): AggregationClient {
+        return ApolloPointClient(apolloClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAggregatedInfoUseCase(aggregationClient: AggregationClient): GetAggregatedInfoUseCase {
         return GetAggregatedInfoUseCase(aggregationClient)
     }
 }

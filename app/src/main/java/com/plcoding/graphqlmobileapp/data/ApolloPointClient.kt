@@ -14,6 +14,7 @@ import com.plcoding.graphqlmobileapp.domain.PointClient
 import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
 import com.plcoding.type.Window
+import java.math.BigDecimal
 import java.sql.Timestamp
 
 class ApolloPointClient(
@@ -53,14 +54,18 @@ class ApolloPointClient(
         return signals?.toDetailedSignalData()
     }
 
-    override suspend fun getAggregatedInfo(from: Timestamp, to: Timestamp, id: String, type: String, window: Optional<Window?>): List<AggregatedInfo>? {
-        val ag = apolloClient
-            .query(GetAggregatedInfoByFilterQuery(from, to, id, type, window))
-            .execute()
-            .data
+    override suspend fun getAggregatedInfo(signals: List<DetailedSignalData>?): AggregatedInfo {
+        val signalsWithValue = signals?.filter { it.signalData.numericValue != null }
+        val min = signalsWithValue?.minBy { it.signalData.numericValue!! }
+        val max = signalsWithValue?.maxBy { it.signalData.numericValue!! }
+        val avg = (signalsWithValue?.sumOf { it.signalData.numericValue!! }?: 0.0) / (signalsWithValue?.size?: 1)
 
-        return ag?.signalsAggregation?.map {
-            it.toAggregatedInfo()
-        }
+        return AggregatedInfo(
+            min = min?.signalData?.numericValue,
+            timeOfMin = min?.signalData?.time,
+            max = max?.signalData?.numericValue,
+            timeOfMax = max?.signalData?.time,
+            avg = avg
+        )
     }
 }

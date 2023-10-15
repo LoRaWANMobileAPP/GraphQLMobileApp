@@ -42,7 +42,8 @@ fun PointQuery.Points.toDetailedPoint(): DetailedPoint? {
         },
         signalData = SignalData(
             numericValue = node.data.numericValue,
-            rawValue = node.data.rawValue
+            rawValue = node.data.rawValue,
+            time = node.timestamp
         )
     )
 }
