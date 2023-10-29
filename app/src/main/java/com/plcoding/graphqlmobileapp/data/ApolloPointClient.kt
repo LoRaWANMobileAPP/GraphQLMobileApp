@@ -2,7 +2,7 @@ package com.plcoding.graphqlmobileapp.data
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
-import com.plcoding.GetAggregatedInfoByFilterQuery
+//import com.plcoding.GetAggregatedInfoByFilterQuery
 import com.plcoding.PointsQuery
 import com.plcoding.PointQuery
 import com.plcoding.SignalsByFilterQuery
@@ -13,7 +13,7 @@ import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.PointClient
 import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
-import com.plcoding.type.Window
+//import com.plcoding.type.Window
 import java.math.BigDecimal
 import java.sql.Timestamp
 

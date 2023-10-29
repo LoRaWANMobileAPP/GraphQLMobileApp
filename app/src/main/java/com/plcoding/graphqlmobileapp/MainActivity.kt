@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.plcoding.graphqlmobileapp.presentation.HomeScreen
 import com.plcoding.graphqlmobileapp.presentation.PointViewModel
 import com.plcoding.graphqlmobileapp.presentation.PointsScreen
 import com.plcoding.graphqlmobileapp.ui.theme.GraphQlMobileAppTheme
@@ -19,11 +20,20 @@ class MainActivity : ComponentActivity() {
             GraphQlMobileAppTheme {
                 val viewModel = hiltViewModel<PointViewModel>()
                 val state by viewModel.state.collectAsState()
+                HomeScreen(
+                    state = state,
+                    //onSelectPoint = viewModel::selectPoint,
+                    //onDismissPointDialog = viewModel::dismissPointDialog
+
+                )
+                /*
                 PointsScreen(
                     state = state,
                     onSelectPoint = viewModel::selectPoint,
                     onDismissPointDialog = viewModel::dismissPointDialog
                 )
+
+                 */
             }
         }
     }
