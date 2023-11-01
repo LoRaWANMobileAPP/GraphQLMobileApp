@@ -75,7 +75,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 
-enum class LorawanPage(
+enum class LoRaWanPage(
     @StringRes val titleResId: Int,
     @DrawableRes val drawableResId: Int
 ) {
@@ -87,9 +87,10 @@ enum class LorawanPage(
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onSelectPoint: (id: String) -> Unit,
-    onDismissPointDialog: () -> Unit,
-    viewModel: PointViewModel = hiltViewModel()
+    onPointClick: (SimpleNode) -> Unit = {},
+    viewModel: PointViewModel = hiltViewModel(),
+    //onSelectPoint: (id: String) -> Unit,
+    //onDismissPointDialog: () -> Unit,
     //state: PointViewModel.PointState
 ) {
     val pagerState = rememberPagerState(pageCount = {
@@ -107,8 +108,10 @@ fun HomeScreen(
         }
     ) {
         HomePagerScreen(
-            onSelectPoint = onSelectPoint,
-            onDismissPointDialog = onDismissPointDialog,
+            viewModel = viewModel,
+            onPointClick = onPointClick,
+            //onSelectPoint = onSelectPoint,
+            //onDismissPointDialog = onDismissPointDialog,
             pagerState = pagerState,
             modifier = Modifier.padding(it)
         )
@@ -118,11 +121,13 @@ fun HomeScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomePagerScreen(
-    onSelectPoint: (id: String) -> Unit,
-    onDismissPointDialog: () -> Unit,
+    onPointClick: (SimpleNode) -> Unit,
+    viewModel: PointViewModel = hiltViewModel(),
+    //onSelectPoint: (id: String) -> Unit,
+    //onDismissPointDialog: () -> Unit,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
-    pages: Array<LorawanPage> = LorawanPage.values()
+    pages: Array<LoRaWanPage> = LoRaWanPage.values()
 ) {
     // Use Modifier.nestedScroll + rememberNestedScrollInteropConnection() here so that this
     // composable participates in the nested scroll hierarchy so that HomeScreen can be used in
@@ -154,16 +159,19 @@ fun HomePagerScreen(
         // Pages
         HorizontalPager(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            pageCount = pages.size,
             state = pagerState,
+            //pageCount = pages.size,
+            //state = pagerState,
             verticalAlignment = Alignment.Top
         ) { index ->
             when (pages[index]) {
-                LorawanPage.MY_SENSORS -> {
+                LoRaWanPage.MY_SENSORS -> {
                     PointScreenTest(
                         Modifier.fillMaxSize(),
-                        onSelectPoint = onSelectPoint,
-                        onDismissPointDialog = onDismissPointDialog
+                        onPointClick = onPointClick,
+                        viewModel = viewModel,
+                        //onSelectPoint = onSelectPoint,
+                        //onDismissPointDialog = onDismissPointDialog
                     )
                 }
                         /*
@@ -173,7 +181,7 @@ fun HomePagerScreen(
                         })
 
                          */
-                LorawanPage.ANALYSE_VIEW -> {
+                LoRaWanPage.ANALYSE_VIEW -> {
                     AnalyzeScreen(
                         //onPlantClick = onPlantClick,
                         modifier = Modifier.fillMaxSize(),

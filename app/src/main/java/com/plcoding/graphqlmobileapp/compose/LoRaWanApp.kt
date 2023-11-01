@@ -4,8 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ShareCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,6 +26,8 @@ import com.plcoding.graphqlmobileapp.domain.UnitType
 import com.plcoding.graphqlmobileapp.presentation.HomeScreen
 import com.plcoding.graphqlmobileapp.ui.theme.GraphQlMobileAppTheme
 import com.plcoding.graphqlmobileapp.R
+import com.plcoding.graphqlmobileapp.presentation.PointDetailScreen
+import com.plcoding.graphqlmobileapp.presentation.PointViewModel
 
 @Composable
 fun LoRaWanApp() {
@@ -36,48 +42,28 @@ fun LoRaWanNavHost(
     navController: NavHostController
 ) {
     val activity = (LocalContext.current as Activity)
+    val viewModel = hiltViewModel<PointViewModel>()
+    //val state by viewModel.state.collectAsState()
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             HomeScreen(
-                /*
-                onPlantClick = {
-                    navController.navigate("plantDetail/${it.plantId}")
-                }
-
-                 */
-            )
-        }
-        composable(
-            "plantDetail/{plantId}",
-            arguments = listOf(navArgument("plantId") {
-                type = NavType.StringType
-            })
-        ) {
-            PlantDetailsScreen(
-                onBackClick = { navController.navigateUp() },
-                onShareClick = {
-                    createShareIntent(activity, it)
-                },
-                onGalleryClick = {
-                    navController.navigate("gallery/${it.name}")
+                viewModel = viewModel,
+                //state = state,
+                onPointClick = {
+                    navController.navigate("sensorDetail/${it.id}")
+                    viewModel::selectPoint
                 }
             )
         }
         composable(
-            "gallery/{plantName}",
-            arguments = listOf(navArgument("plantName") {
+            "sensorDetail/{Id}",
+            arguments = listOf(navArgument("Id") {
                 type = NavType.StringType
             })
         ) {
-            GalleryScreen(
-                onPhotoClick = {
-                    val uri = Uri.parse(it.user.attributionUrl)
-                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                    activity.startActivity(intent)
-                },
-                onUpClick = {
-                    navController.navigateUp()
-                })
+            PointDetailScreen(
+                onBackClick = { navController.navigateUp() }
+            )
         }
     }
 }

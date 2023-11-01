@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.plcoding.graphqlmobileapp.compose.LoRaWanApp
 import com.plcoding.graphqlmobileapp.presentation.HomeScreen
 import com.plcoding.graphqlmobileapp.presentation.PointViewModel
 import com.plcoding.graphqlmobileapp.presentation.PointsScreen
@@ -18,11 +19,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GraphQlMobileAppTheme {
-                val viewModel = hiltViewModel<PointViewModel>()
-                val state by viewModel.state.collectAsState()
-                HomeScreen(
-                    state = state,
-                    //onSelectPoint = viewModel::selectPoint,
+                //val viewModel = hiltViewModel<PointViewModel>()
+                //val state by viewModel.state.collectAsState()
+                LoRaWanApp(
+                    //state = state,
+                    //onPointClick = viewModel::selectPoint,
                     //onDismissPointDialog = viewModel::dismissPointDialog
 
                 )

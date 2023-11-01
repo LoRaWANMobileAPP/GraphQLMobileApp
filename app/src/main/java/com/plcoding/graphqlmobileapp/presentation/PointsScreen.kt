@@ -75,15 +75,18 @@ import java.time.LocalDateTime
 fun PointScreenTest(
     modifier: Modifier = Modifier,
     viewModel: PointViewModel = hiltViewModel(),
-    onSelectPoint: (id: String) -> Unit,
-    onDismissPointDialog: () -> Unit
+    onPointClick: (SimpleNode) -> Unit,
+    //onSelectPoint: (id: String) -> Unit
+    //onDismissPointDialog: () -> Unit
 ){
     val state by viewModel.state.collectAsState()
+
     PointScreenTest(
         state = state,
         modifier = modifier,
-        onSelectPoint = onSelectPoint,
-        onDismissPointDialog = onDismissPointDialog
+        onPointClick = onPointClick
+        //onSelectPoint = onSelectPoint
+        //onDismissPointDialog = onDismissPointDialog
     )
 }
 // Replace PointScreen if this works properly - based on GardenScreen
@@ -91,8 +94,9 @@ fun PointScreenTest(
 fun PointScreenTest(
     state: PointViewModel.PointState,
     modifier: Modifier = Modifier,
-    onSelectPoint: (id: String) -> Unit = {},
-    onDismissPointDialog: () -> Unit
+    onPointClick: (SimpleNode) -> Unit = {},
+    //onSelectPoint: (id: String) -> Unit = {},
+    //onDismissPointDialog: () -> Unit
     ){
     if (state.isLoading){
         CircularProgressIndicator(
@@ -102,7 +106,7 @@ fun PointScreenTest(
     else if (state.point?.edges.isNullOrEmpty()) {
         EmptyScreen(modifier = modifier)
     } else {
-        PointsList(state = state, onSelectPoint = onSelectPoint, onDismissPointDialog = onDismissPointDialog, modifier = modifier)
+        PointsList(state = state, onPointClick = onPointClick, modifier = modifier)
     }
 }
 
@@ -127,8 +131,9 @@ private fun EmptyScreen(modifier: Modifier = Modifier){
 @Composable
 private fun PointsList(
     state: PointViewModel.PointState,
-    onSelectPoint: (id: String) -> Unit,
-    onDismissPointDialog: () -> Unit,
+    onPointClick: (SimpleNode) -> Unit,
+    //onSelectPoint: (id: String) -> Unit,
+    //onDismissPointDialog: () -> Unit,
     modifier: Modifier = Modifier
 ){
     // Call reportFullyDrawn when the garden list has been rendered
@@ -151,7 +156,8 @@ private fun PointsList(
             PointsListItem(
                 edge = edge,
                 state = state,
-                onSelectPoint = onSelectPoint,
+                onPointClick = onPointClick,
+                //onSelectPoint = onSelectPoint,
             )
         }
     }
@@ -162,14 +168,15 @@ private fun PointsList(
 private fun PointsListItem(
     edge: SimpleEdge,
     state: PointViewModel.PointState,
-    onSelectPoint: (id: String) -> Unit
+    onPointClick: (SimpleNode) -> Unit
+    //onSelectPoint: (id: String) -> Unit
 ){
     // Dimensions
     val cardSideMargin = dimensionResource(id = R.dimen.card_side_margin)
     val marginNormal = dimensionResource(id = R.dimen.margin_normal)
 
     ElevatedCard(
-        onClick = { onSelectPoint(edge.node.id) },
+        onClick = { onPointClick(edge.node) },
         modifier = Modifier.padding(
             start = cardSideMargin,
             end = cardSideMargin,
