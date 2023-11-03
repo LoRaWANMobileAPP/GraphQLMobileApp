@@ -134,10 +134,12 @@ fun HomePagerScreen(
     // use cases like a collapsing toolbar
     Column(modifier) {
         val coroutineScope = rememberCoroutineScope()
+        val imageModifier = Modifier.background(MaterialTheme.colorScheme.background)
 
         // Tab row
         TabRow(
-            selectedTabIndex = pagerState.currentPage
+            selectedTabIndex = pagerState.currentPage,
+            backgroundColor = MaterialTheme.colorScheme.background
         ){
             pages.forEachIndexed { index, page ->
                 val title = stringResource(id = page.titleResId)
@@ -148,7 +150,9 @@ fun HomePagerScreen(
                     icon = {
                         Icon(
                             painter = painterResource(id = page.drawableResId),
-                            contentDescription = title
+                            contentDescription = title,
+                            //tint = Color.Black,
+                            //modifier = imageModifier
                         )
                     },
                     unselectedContentColor = MaterialTheme.colorScheme.secondary
