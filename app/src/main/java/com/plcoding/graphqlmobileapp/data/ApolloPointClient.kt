@@ -13,18 +13,20 @@ import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.PointClient
 import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
+import com.plcoding.graphqlmobileapp.utils.SensorsHelper
 import com.plcoding.type.Window
 import java.math.BigDecimal
 import java.sql.Timestamp
 
 class ApolloPointClient(
-    private val apolloClient: ApolloClient
+    private val apolloClient: ApolloClient,
+    private val sensorsHelper: SensorsHelper
 ) : PointClient, SignalClient, AggregationClient
 {
     override suspend fun getPoints(): SimplePoint? {
         return try {
             var points = apolloClient
-                .query(PointsQuery())
+                .query(PointsQuery(sensorsHelper.getRequiredLastParameterToCoverAllSignals()))
                 .execute()
                 .data
                 ?.points
