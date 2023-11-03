@@ -1,10 +1,26 @@
-query Points {
-    points {
+query Points($lastParameter: Int!) {
+    points
+    {
         edges {
             node {
                 id
                 name
                 description
+                signals (
+                    paginate: { last: $lastParameter }
+                ) {
+                    edges {
+                        node {
+                            timestamp
+                            type
+                            unit
+                            data {
+                                numericValue
+                                rawValue
+                            }
+                        }
+                    }
+                }
             }
         }
     }
