@@ -3,6 +3,7 @@ package com.plcoding.graphqlmobileapp.data
 import com.plcoding.PointQuery
 import com.plcoding.PointsQuery
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
+import com.plcoding.graphqlmobileapp.domain.LastSignalData
 import com.plcoding.graphqlmobileapp.domain.Location
 import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.SimpleEdge
@@ -17,7 +18,19 @@ fun PointsQuery.Points.toSimplePoints(): SimplePoint {
                 node = SimpleNode(
                     id = edge.node.id,
                     name = edge.node.name!!,
-                    description = edge.node.description
+                    description = edge.node.description,
+                    lastSignals = edge.node.signals?.edges?.groupBy { it.node.type }?.map {
+                        val lastValue = it.value.maxBy { edge ->
+                            edge.node.timestamp.toString()
+                        }
+                        LastSignalData(
+                            time = lastValue.node.timestamp,
+                            rawValue = lastValue.node.data.rawValue,
+                            numericValue = lastValue.node.data.numericValue,
+                            unit = lastValue.node.unit.name,
+                            type = lastValue.node.type
+                        )
+                    } ?: emptyList<LastSignalData>()
                 )
             )
         }
@@ -47,35 +60,3 @@ fun PointQuery.Points.toDetailedPoint(): DetailedPoint? {
         )
     )
 }
-
-//fun PointSummaryByLatestSignalQuery.Signals.toPointSummaryByLatestSignal(): PointWithLatestSignal {
-//    val edge = this.edges?.let { it[0] }!!
-//    return PointWithLatestSignal(
-//        id = edge.node.id,
-//        timestamp = edge.node.timestamp,
-//        point = SimplePoint(
-//            edges = listOf(
-//                SimpleEdge(
-//                    node = SimpleNode(
-//                        id = edge.node.point.id,
-//                        name = edge.node.point.name,
-//                        description = edge.node.point.description
-//                    )
-//                )
-//            )
-//        ),
-//        signalData = SignalData(
-//            numericValue = "0",
-//            rawValue = "0"
-//        ),
-//        location = edge.node.location?.let {
-//            Location(
-//                lat = it.lat,
-//                lon = it.lon
-//            )
-//        },
-//        unit = UnitType.safeValueOf(edge.node.unit.rawValue)
-//
-//    )
-//
-//}

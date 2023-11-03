@@ -63,6 +63,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
+import com.plcoding.graphqlmobileapp.domain.LastSignalData
 import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.SimpleEdge
 import com.plcoding.graphqlmobileapp.domain.SimpleNode
@@ -262,6 +263,11 @@ fun PointsScreen(
                             .clickable { onSelectPoint(edge.node.id) }
                             .padding(16.dp)
                     )
+                    edge.node.lastSignals?.forEach { data ->
+                        DataItem(
+                            dataItem = data
+                        )
+                    }
                 }
             }
 
@@ -357,6 +363,33 @@ private fun EdgeItem(
             text = edge.node.name ?: "No Name",
             fontSize = 10.sp
         )
+    }
+}
+
+@Composable
+private fun DataItem(
+    dataItem: LastSignalData,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = dataItem.rawValue,
+            fontSize = 10.sp
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = dataItem.unit,
+            fontSize = 10.sp
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = dataItem.type,
+            fontSize = 10.sp
+        )
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
