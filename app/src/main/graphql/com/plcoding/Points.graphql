@@ -1,26 +1,10 @@
 query Points {
-    points
-    {
+    points {
         edges {
             node {
                 id
                 name
                 description
-                signals (
-                    paginate: { last: 2 }
-                ) {
-                    edges {
-                        node {
-                            timestamp
-                            type
-                            unit
-                            data {
-                                numericValue
-                                rawValue
-                            }
-                        }
-                    }
-                }
             }
         }
     }
