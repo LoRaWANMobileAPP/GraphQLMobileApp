@@ -9,7 +9,6 @@ import com.plcoding.graphqlmobileapp.domain.GetPointsUseCase
 import com.plcoding.graphqlmobileapp.domain.GetSignalUseCase
 import com.plcoding.graphqlmobileapp.domain.PointClient
 import com.plcoding.graphqlmobileapp.domain.SignalClient
-import com.plcoding.graphqlmobileapp.utils.SensorsHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,8 +18,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    private val sensorsHelper = SensorsHelper()
 
     @Provides
     @Singleton
@@ -35,13 +32,13 @@ object AppModule {
     @Provides
     @Singleton
     fun providePointClient(apolloClient: ApolloClient): PointClient {
-        return ApolloPointClient(apolloClient, sensorsHelper)
+        return ApolloPointClient(apolloClient)
     }
 
     @Provides
     @Singleton
     fun provideSignalClient(apolloClient: ApolloClient): SignalClient {
-        return ApolloPointClient(apolloClient, sensorsHelper)
+        return ApolloPointClient(apolloClient)
     }
 
     @Provides
@@ -65,7 +62,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAggregationClient(apolloClient: ApolloClient): AggregationClient {
-        return ApolloPointClient(apolloClient, sensorsHelper)
+        return ApolloPointClient(apolloClient)
     }
 
     @Provides

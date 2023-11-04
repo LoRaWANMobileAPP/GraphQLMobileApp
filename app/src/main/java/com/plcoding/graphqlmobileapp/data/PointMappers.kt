@@ -1,15 +1,18 @@
 package com.plcoding.graphqlmobileapp.data
 
+import com.plcoding.ExistingSignalsSpecificPointQuery
 import com.plcoding.PointQuery
 import com.plcoding.PointsQuery
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.LastSignalData
 import com.plcoding.graphqlmobileapp.domain.Location
+import com.plcoding.graphqlmobileapp.domain.PointSpecification
 import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.SimpleEdge
 import com.plcoding.graphqlmobileapp.domain.SimpleNode
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
 import com.plcoding.graphqlmobileapp.domain.UnitType
+import okhttp3.internal.notifyAll
 
 fun PointsQuery.Points.toSimplePoints(): SimplePoint {
     return SimplePoint(
@@ -59,4 +62,16 @@ fun PointQuery.Points.toDetailedPoint(): DetailedPoint? {
             time = node.timestamp
         )
     )
+}
+
+fun ExistingSignalsSpecificPointQuery.Points.toPointSpecification(): List<PointSpecification>? {
+    return this.edges?.map {
+        PointSpecification(
+            id = it.node.id,
+            name = it.node.name,
+            description = it.node.description,
+            lastActive = it.node.lastActive,
+            existingSignalTypes = it.node.existingSignalTypes
+        )
+    }
 }

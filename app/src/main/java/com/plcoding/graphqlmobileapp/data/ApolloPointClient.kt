@@ -1,8 +1,7 @@
 package com.plcoding.graphqlmobileapp.data
 
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Optional
-//import com.plcoding.GetAggregatedInfoByFilterQuery
+import com.plcoding.ExistingSignalsSpecificPointQuery
 import com.plcoding.PointsQuery
 import com.plcoding.PointQuery
 import com.plcoding.SignalsByFilterQuery
@@ -11,22 +10,18 @@ import com.plcoding.graphqlmobileapp.domain.AggregationClient
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.PointClient
+import com.plcoding.graphqlmobileapp.domain.PointSpecification
 import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
-import com.plcoding.graphqlmobileapp.utils.SensorsHelper
-import com.plcoding.type.Window
-import java.math.BigDecimal
-import java.sql.Timestamp
 
 class ApolloPointClient(
-    private val apolloClient: ApolloClient,
-    private val sensorsHelper: SensorsHelper
+    private val apolloClient: ApolloClient
 ) : PointClient, SignalClient, AggregationClient
 {
     override suspend fun getPoints(): SimplePoint? {
         return try {
             var points = apolloClient
-                .query(PointsQuery(sensorsHelper.getRequiredLastParameterToCoverAllSignals()))
+                .query(PointsQuery(getRequiredLastParameterToCoverAllSignals()))
                 .execute()
                 .data
                 ?.points
@@ -45,6 +40,27 @@ class ApolloPointClient(
             .data
             ?.points
         return points?.toDetailedPoint()
+    }
+
+    private suspend fun getRequiredLastParameterToCoverAllSignals(): Int {
+        return getPointSpecification()?.maxBy {
+            it.existingSignalTypes?.size ?: 1
+        }?.existingSignalTypes?.size ?: 1
+    }
+
+    override suspend fun getPointSpecification(): List<PointSpecification>? {
+        return try {
+            var points = apolloClient
+                .query(ExistingSignalsSpecificPointQuery())
+                .execute()
+                .data
+                ?.points
+
+            points?.toPointSpecification()
+        } catch (ex: Exception) {
+            println(ex)
+            null
+        }
     }
 
     override suspend fun getSignals(id: String): List<DetailedSignalData>? {

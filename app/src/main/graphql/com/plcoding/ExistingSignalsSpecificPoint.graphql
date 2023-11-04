@@ -1,0 +1,14 @@
+query ExistingSignalsSpecificPoint {
+    points
+    {
+        edges {
+            node {
+                id
+                name
+                description
+                existingSignalTypes
+                lastActive
+            }
+        }
+    }
+}
