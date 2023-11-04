@@ -1,7 +1,5 @@
 package com.plcoding.graphqlmobileapp.domain
 
-import java.sql.Timestamp
-
 data class DetailedPoint(
     val id: String,
     val name: String?,
