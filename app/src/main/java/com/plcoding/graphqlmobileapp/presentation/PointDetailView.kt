@@ -42,7 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 
 import androidx.compose.ui.unit.dp
-
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.plcoding.graphqlmobileapp.R
 import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
@@ -60,7 +60,7 @@ fun PointDetailScreen(
     onBackClick: () -> Unit,
     sensorId: String?,
     //viewModel: PointViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    //modifier: Modifier = Modifier
 
 ){
     val sensorData = when(sensorId){
@@ -84,30 +84,41 @@ fun PointDetailScreen(
     }
 
 Box(
-    //modifier = Modifier.fillMaxSize().fillMaxWidth(0.9f),
+   // modifier = Modifier.fillMaxSize().fillMaxWidth(0.9f),
     //contentAlignment = Alignment.Center
+    modifier = Modifier
+        .padding(top=40.dp)
 ){
     LazyColumn(
-        modifier = Modifier
-            .padding(top=30.dp)
-            .fillMaxSize().fillMaxWidth(0.9F)
+
+            //.fillMaxSize().fillMaxWidth(0.9F)
+
 
 
 
     ){
+
         item {
-            Surface(
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
 
-            ) {
-                Text(
-                    text = sensorData.name,
-                    style = MaterialTheme.typography.displaySmall,
-                    textAlign= TextAlign.Center,
+            ){
+                Surface(
 
+                ) {
 
-                   // modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                    Text(
+                        text = sensorData.name,
+                        style = MaterialTheme.typography.displaySmall,
+
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+
+                    )
+                }
             }
+
         }
         item {
             Image(
@@ -118,20 +129,50 @@ Box(
 
         }
         item{
-            Surface(
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+
+
+
+
 
             ) {
-                Text(
-                text = sensorData.description,
-                style = MaterialTheme.typography.labelSmall)
+                Surface() {
+                    Text(
+                        text = sensorData.description,
+                        style = MaterialTheme.typography.labelSmall,
+                        textAlign= TextAlign.Left,
+                        modifier = Modifier.padding(horizontal= 10.dp)
+                        //modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                    )
+                }
             }
+
         }
         item{
             Surface() {
                 Text(
                     text = "The sensor iD is: ${sensorData.id}",
-                    style = MaterialTheme.typography.labelSmall)
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(horizontal= 10.dp)
+                )
             }
+        }
+        item{
+            Surface() {
+                Text(
+                    text = "Below are some sensor data: ",
+                    style=MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(horizontal=10.dp)
+                        .padding(top=10.dp)
+
+                )
+            }
+        }
+        item{
+            //Reserved for input of date.
         }
     }
 
@@ -155,4 +196,32 @@ fun PointDetailViewPreview(
 
 ){
     PointDetailScreen(onBackClick = onBackClick, sensorId=sensorId)
+}
+
+@Preview
+@Composable
+fun PointDetailPreview(
+
+){
+    LazyColumn(
+modifier = Modifier
+    ){
+        item{
+            Text(
+                text = "test",
+                textAlign = TextAlign.Left
+            )
+
+        }
+
+        item{
+            Surface(){
+            Text(text = "test")
+        }
+        }
+        item{
+            Text(text = "test")
+        }
+
+    }
 }
