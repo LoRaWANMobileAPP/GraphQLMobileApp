@@ -26,6 +26,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,8 +36,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +54,8 @@ import com.plcoding.graphqlmobileapp.domain.LastSignalData
 import com.plcoding.graphqlmobileapp.domain.SimpleEdge
 import com.plcoding.graphqlmobileapp.domain.SimpleNode
 import com.plcoding.graphqlmobileapp.ui.theme.GraphQlMobileAppTheme
+import com.plcoding.graphqlmobileapp.utils.ImageHelper
+import com.plcoding.graphqlmobileapp.utils.LoRaWANImage
 
 @Composable
 fun PointScreenTest(
@@ -153,6 +159,7 @@ private fun PointsListItem(
     onPointClick: (SimpleNode) -> Unit
     //onSelectPoint: (id: String) -> Unit
 ){
+    val imageHelper = ImageHelper()
     // Dimensions
     val cardSideMargin = dimensionResource(id = R.dimen.card_side_margin)
     val marginNormal = dimensionResource(id = R.dimen.margin_normal)
@@ -167,6 +174,15 @@ private fun PointsListItem(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ){
         Column(Modifier.fillMaxWidth()) {
+            LoRaWANImage(
+                model = imageHelper.getSensorImageUrl(edge.node.name ?: "Default"),
+                contentDescription = edge.node.name,
+                Modifier
+                    .fillMaxWidth()
+                    .height(dimensionResource(id = R.dimen.plant_item_image_height)),
+                contentScale = ContentScale.Crop,
+            )
+
             // Sensor name
             Text(
                 text = edge.node.name ?: "No Name",
@@ -174,6 +190,7 @@ private fun PointsListItem(
                     .padding(vertical = marginNormal)
                     .align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
             )
             // Sensor reading
             edge.node.lastSignals?.forEach { data ->
