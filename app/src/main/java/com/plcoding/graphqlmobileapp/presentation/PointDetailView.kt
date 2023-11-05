@@ -1,5 +1,6 @@
 package com.plcoding.graphqlmobileapp.presentation
 
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,9 +35,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.apollographql.apollo3.api.BooleanExpression
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.absoluteOffset
 
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 
 import androidx.compose.ui.unit.dp
 
@@ -48,7 +51,9 @@ import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 data class Sensor(
     val id: String?,
     val name: String,
-    val description: String
+    val description: String,
+    val imageurl: Int
+
 )
 @Composable
 fun PointDetailScreen(
@@ -61,46 +66,61 @@ fun PointDetailScreen(
     val sensorData = when(sensorId){
         "6505c5094543cbb034793ef2"->{
             Sensor("6505c5094543cbb034793ef2", stringResource(id = R.string.Comfort_sensor), stringResource(
-                id = R.string.Comfort_sens_info
-            ))
+                id = R.string.Comfort_sens_info), R.drawable.comfortsensor)
         }
         "6505c702f490ba356202544f"->{
             Sensor("6505c702f490ba356202544f", stringResource(id = R.string.Door_sensor), stringResource(
                 id = R.string.Door_sens_info
-            ))
+            ), R.drawable.doorsensor)
         }
         "65102bf52a6d1ce45e3792e3"->{
             Sensor("65102bf52a6d1ce45e3792e3", stringResource(id = R.string.Temperature_sensor),
-                stringResource(id = R.string.temp_sens_info))
+                stringResource(id = R.string.temp_sens_info), R.drawable.temperaturesensor)
         }
 
         else -> {
-            Sensor(sensorId,"Unknown Sensor","unknown description")
+            Sensor(sensorId,"Unknown Sensor","unknown description", 2)
         }
     }
 
+Box(
+    //modifier = Modifier.fillMaxSize().fillMaxWidth(0.9f),
+    //contentAlignment = Alignment.Center
+){
+    LazyColumn(
+        modifier = Modifier
+            .padding(top=30.dp)
+            .fillMaxSize().fillMaxWidth(0.9F)
 
-    LazyColumn(){
+
+
+    ){
         item {
-            Surface() {
+            Surface(
+
+            ) {
                 Text(
                     text = sensorData.name,
-                    style = MaterialTheme.typography.displaySmall)
+                    style = MaterialTheme.typography.displaySmall,
+                    textAlign= TextAlign.Center,
+
+
+                   // modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
             }
         }
         item {
             Image(
-                painter = painterResource(id = R.drawable.ic_wireless_sensor_symbol), // Replace with your image resource
+                painter = painterResource(sensorData.imageurl), // Replace with your image resource
                 contentDescription = "My Image",
                 modifier = Modifier.fillMaxWidth()
             )
-            Text(
 
-                text = "image",
-                style = MaterialTheme.typography.displaySmall)
         }
         item{
-            Surface() {
+            Surface(
+
+            ) {
                 Text(
                 text = sensorData.description,
                 style = MaterialTheme.typography.labelSmall)
@@ -121,6 +141,7 @@ fun PointDetailScreen(
 
 
 
+}
 }
 
 

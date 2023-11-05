@@ -15,5 +15,8 @@
     <string name="temp_sens_info">The temperature sensor is located at USN, somewhere on the outside.</string>
     <string name="Door_sensor">Door Sensor</string>
     <string name="Door_sens_info">The door sensor is giving out the state of the door, if it is open or closed. </string>
+    <string name="url_comfort">comfortsensor</string>
+    <string name="url_door">doorsensor</string>
+    <string name="url_temperature">temperaturesensor</string>
 
 </resources>
