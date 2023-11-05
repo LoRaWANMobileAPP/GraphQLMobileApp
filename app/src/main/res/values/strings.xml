@@ -9,4 +9,11 @@
     <string name="sensor_reading">Sensor value</string>
     <string name="sensor_timestamp">Timestamp</string>
 
+    <string name="Comfort_sensor">Comfort Sensor</string>
+    <string name="Comfort_sens_info">The comfort sensor measures both the humidity and temperatur indoor at USN</string>
+    <string name="Temperature_sensor">Temperature Sensor</string>
+    <string name="temp_sens_info">The temperature sensor is located at USN, somewhere on the outside.</string>
+    <string name="Door_sensor">Door Sensor</string>
+    <string name="Door_sens_info">The door sensor is giving out the state of the door, if it is open or closed. </string>
+
 </resources>

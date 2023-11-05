@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ShareCompat
+import androidx.fragment.app.FragmentManager.BackStackEntry
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -28,6 +29,7 @@ import com.plcoding.graphqlmobileapp.ui.theme.GraphQlMobileAppTheme
 import com.plcoding.graphqlmobileapp.R
 import com.plcoding.graphqlmobileapp.presentation.PointDetailScreen
 import com.plcoding.graphqlmobileapp.presentation.PointViewModel
+
 
 @Composable
 fun LoRaWanApp() {
@@ -50,6 +52,8 @@ fun LoRaWanNavHost(
                 viewModel = viewModel,
                 //state = state,
                 onPointClick = {
+                    //only for testing. gathering LoRaWAN sensor ID.
+                    //println("Sensor ID: ${it.id}")
                     navController.navigate("sensorDetail/${it.id}")
                     viewModel::selectPoint
                 }
@@ -61,8 +65,12 @@ fun LoRaWanNavHost(
                 type = NavType.StringType
             })
         ) {
+            BackStackEntry ->
+            //accessing sensorID from backstackentry
+            val sensorId =BackStackEntry.arguments?.getString("Id")
             PointDetailScreen(
-                onBackClick = { navController.navigateUp() }
+                onBackClick = { navController.navigateUp() },
+                sensorId = sensorId //passing the sensorID to PointDetailView.
             )
         }
     }
