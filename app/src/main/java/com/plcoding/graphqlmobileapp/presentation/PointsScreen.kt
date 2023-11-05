@@ -6,6 +6,8 @@ import androidx.activity.compose.ReportDrawnWhen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -184,6 +186,7 @@ private fun PointsListItem(
 //        }
 //    }
     val imageHelper = ImageHelper()
+    val interactionSource = remember { MutableInteractionSource() }
     // Dimensions
     val cardSideMargin = dimensionResource(id = R.dimen.card_side_margin)
     val marginNormal = dimensionResource(id = R.dimen.margin_normal)
@@ -194,7 +197,7 @@ private fun PointsListItem(
             start = cardSideMargin,
             end = cardSideMargin,
             bottom = dimensionResource(id = R.dimen.card_bottom_margin)
-        ),
+        ).hoverable(enabled = true, interactionSource = interactionSource),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ){
         Column(Modifier.fillMaxWidth()) {
