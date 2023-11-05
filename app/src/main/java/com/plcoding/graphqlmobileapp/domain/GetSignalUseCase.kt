@@ -35,7 +35,7 @@ class GetSignalUseCase(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun fetchAndUpdate(id: String): List<DetailedSignalData>? {
-        return signalClient.getSignals(id)
+        return signalClient.getSignals(id, null, null)
     }
 }
 

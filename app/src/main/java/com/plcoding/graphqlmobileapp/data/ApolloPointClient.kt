@@ -13,6 +13,9 @@ import com.plcoding.graphqlmobileapp.domain.PointClient
 import com.plcoding.graphqlmobileapp.domain.PointSpecification
 import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
+import java.sql.Timestamp
+import java.time.LocalDateTime
+import java.util.Date
 
 class ApolloPointClient(
     private val apolloClient: ApolloClient
@@ -25,7 +28,6 @@ class ApolloPointClient(
                 .execute()
                 .data
                 ?.points
-
             points?.toSimplePoints()
         } catch (ex: Exception) {
             println(ex)
@@ -63,9 +65,12 @@ class ApolloPointClient(
         }
     }
 
-    override suspend fun getSignals(id: String): List<DetailedSignalData>? {
+    override suspend fun getSignals(id: String, fromDate: Timestamp?, toDate: Timestamp?): List<DetailedSignalData>? {
+        val currentDateTime = Date()
+        val fromDateParameter = Timestamp(fromDate?.time ?: currentDateTime.time - 86400000).toString()
+        val toDateParameter = Timestamp(toDate?.time ?: currentDateTime.time).toString()
         val signals = apolloClient
-            .query(SignalsByFilterQuery(id, "2023-10-08T20:00:00.0000", "2023-10-08T14:00:00.0000"))
+            .query(SignalsByFilterQuery(id, fromDateParameter, toDateParameter))
             .execute()
             .data
             ?.signals
