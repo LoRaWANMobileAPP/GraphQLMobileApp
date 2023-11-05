@@ -1,7 +1,9 @@
 package com.plcoding.graphqlmobileapp.presentation
 
+import android.widget.ImageView
 import androidx.activity.compose.ReportDrawn
 import androidx.activity.compose.ReportDrawnWhen
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -32,10 +35,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -159,6 +166,23 @@ private fun PointsListItem(
     onPointClick: (SimpleNode) -> Unit
     //onSelectPoint: (id: String) -> Unit
 ){
+//    val customPainter = remember {
+//        object : Painter() {
+//
+//            override val intrinsicSize: Size
+//                get() = Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
+//
+//            override fun DrawScope.onDraw() {
+//                drawImage(imageBitmap)
+//                drawLine(
+//                    color = Color.Red,
+//                    start = Offset(0f, 0f),
+//                    end = Offset(imageBitmap.width.toFloat(), imageBitmap.height.toFloat()),
+//                    strokeWidth = 5f
+//                )
+//            }
+//        }
+//    }
     val imageHelper = ImageHelper()
     // Dimensions
     val cardSideMargin = dimensionResource(id = R.dimen.card_side_margin)
@@ -174,13 +198,19 @@ private fun PointsListItem(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ){
         Column(Modifier.fillMaxWidth()) {
-            LoRaWANImage(
-                model = imageHelper.getSensorImageUrl(edge.node.name ?: "Default"),
-                contentDescription = edge.node.name,
+//            LoRaWANImage(
+//                model = imageHelper.getSensorImageUrl(edge.node.name ?: "Default"),
+//                contentDescription = edge.node.name,
+//                Modifier
+//                    .fillMaxSize(),
+//                contentScale = ContentScale.Crop,
+//            )
+            Image(
+                painter = painterResource(id = imageHelper.getSensorImageUrl(edge.node.name ?: "Default")),
+                contentDescription = edge.node.name ?: "No Name",
                 Modifier
-                    .fillMaxWidth()
-                    .height(dimensionResource(id = R.dimen.plant_item_image_height)),
-                contentScale = ContentScale.Crop,
+                    .padding(vertical = marginNormal)
+                    .align(Alignment.CenterHorizontally)
             )
 
             // Sensor name
