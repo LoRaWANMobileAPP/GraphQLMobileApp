@@ -4,7 +4,7 @@
     <string name="empty_screen">No sensors to load</string>
 
     <string name="my_sensors_view">My Sensors</string>
-    <string name="analyze_view">Analyze</string>
+    <string name="info_view">App Info</string>
 
     <string name="sensor_reading">Sensor value</string>
     <string name="sensor_timestamp">Timestamp</string>
@@ -18,5 +18,9 @@
     <string name="url_comfort">comfortsensor</string>
     <string name="url_door">doorsensor</string>
     <string name="url_temperature">temperaturesensor</string>
+
+    <string name="img_system_overview">System Overview</string>
+    <string name="system_description_heading">System Description</string>
+    <string name="system_description_text">System Description</string>
 
 </resources>

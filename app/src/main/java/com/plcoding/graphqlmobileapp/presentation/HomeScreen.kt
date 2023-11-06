@@ -1,40 +1,21 @@
 package com.plcoding.graphqlmobileapp.presentation
 
-import androidx.activity.compose.ReportDrawn
-import androidx.activity.compose.ReportDrawnWhen
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TabRow
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -43,36 +24,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
-import com.plcoding.graphqlmobileapp.domain.DetailedPoint
-import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
-import com.plcoding.graphqlmobileapp.domain.SignalData
-import com.plcoding.graphqlmobileapp.domain.SimpleEdge
-import com.plcoding.graphqlmobileapp.domain.SimpleNode
-import com.plcoding.graphqlmobileapp.domain.UnitType
-import com.plcoding.graphqlmobileapp.ui.theme.GraphQlMobileAppTheme
 import com.plcoding.graphqlmobileapp.R
+import com.plcoding.graphqlmobileapp.domain.SimpleNode
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 
 enum class LoRaWanPage(
@@ -80,7 +41,7 @@ enum class LoRaWanPage(
     @DrawableRes val drawableResId: Int
 ) {
     MY_SENSORS(R.string.my_sensors_view, R.drawable.ic_wireless_sensor_symbol),
-    ANALYSE_VIEW(R.string.analyze_view, R.drawable.ic_bar_chart_symbol)
+    INFO_VIEW(R.string.info_view, R.drawable.ic_info_symbol)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -102,7 +63,7 @@ fun HomeScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             HomeTopAppBar(
-                pagerState = pagerState,
+                //pagerState = pagerState,
                 scrollBehavior = scrollBehavior
             )
         }
@@ -121,12 +82,13 @@ fun HomeScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomePagerScreen(
+    modifier: Modifier = Modifier,
     onPointClick: (SimpleNode) -> Unit,
     viewModel: PointViewModel = hiltViewModel(),
     //onSelectPoint: (id: String) -> Unit,
     //onDismissPointDialog: () -> Unit,
     pagerState: PagerState,
-    modifier: Modifier = Modifier,
+
     pages: Array<LoRaWanPage> = LoRaWanPage.values()
 ) {
     // Use Modifier.nestedScroll + rememberNestedScrollInteropConnection() here so that this
@@ -134,7 +96,7 @@ fun HomePagerScreen(
     // use cases like a collapsing toolbar
     Column(modifier) {
         val coroutineScope = rememberCoroutineScope()
-        val imageModifier = Modifier.background(MaterialTheme.colorScheme.background)
+        //val imageModifier = Modifier.background(MaterialTheme.colorScheme.background)
 
         // Tab row
         TabRow(
@@ -185,8 +147,8 @@ fun HomePagerScreen(
                         })
 
                          */
-                LoRaWanPage.ANALYSE_VIEW -> {
-                    AnalyzeScreen(
+                LoRaWanPage.INFO_VIEW -> {
+                    InfoScreen(
                         //onPlantClick = onPlantClick,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -201,9 +163,9 @@ fun HomePagerScreen(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeTopAppBar(
-    pagerState: PagerState,
+    //pagerState: PagerState,
     scrollBehavior: TopAppBarScrollBehavior,
-    modifier: Modifier = Modifier
+    //modifier: Modifier = Modifier
 ) {
     TopAppBar(
         title = {

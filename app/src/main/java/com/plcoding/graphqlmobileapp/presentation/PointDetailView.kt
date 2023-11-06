@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.apollographql.apollo3.api.BooleanExpression
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.absoluteOffset
 
 import androidx.compose.ui.graphics.painter.Painter
@@ -91,6 +92,7 @@ Box(
         modifier = Modifier
             .padding(top=30.dp)
             .fillMaxSize().fillMaxWidth(0.9F)
+            .background(MaterialTheme.colorScheme.background)
 
 
 

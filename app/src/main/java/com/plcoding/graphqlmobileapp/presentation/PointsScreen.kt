@@ -94,9 +94,10 @@ fun PointScreenTest(
     //onDismissPointDialog: () -> Unit
     ){
     if (state.isLoading){
-        Box(){
+        Box(modifier.fillMaxSize()){
             CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier
+                    .align(Alignment.Center)
             )
         }
     }
@@ -152,7 +153,7 @@ private fun PointsList(
         {edge ->
             PointsListItem(
                 edge = edge,
-                state = state,
+                //state = state,
                 onPointClick = onPointClick,
                 //onSelectPoint = onSelectPoint,
             )
@@ -164,7 +165,7 @@ private fun PointsList(
 @Composable
 private fun PointsListItem(
     edge: SimpleEdge,
-    state: PointViewModel.PointState,
+    //state: PointViewModel.PointState,
     onPointClick: (SimpleNode) -> Unit
     //onSelectPoint: (id: String) -> Unit
 ){
@@ -193,11 +194,13 @@ private fun PointsListItem(
 
     ElevatedCard(
         onClick = { onPointClick(edge.node) },
-        modifier = Modifier.padding(
-            start = cardSideMargin,
-            end = cardSideMargin,
-            bottom = dimensionResource(id = R.dimen.card_bottom_margin)
-        ).hoverable(enabled = true, interactionSource = interactionSource),
+        modifier = Modifier
+            .padding(
+                start = cardSideMargin,
+                end = cardSideMargin,
+                bottom = dimensionResource(id = R.dimen.card_bottom_margin)
+            )
+            .hoverable(enabled = true, interactionSource = interactionSource),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ){
         Column(Modifier.fillMaxWidth()) {
@@ -240,7 +243,7 @@ fun PointsScreen(
     state: PointViewModel.PointState,
     onSelectPoint: (id: String) -> Unit,
     onDismissPointDialog: () -> Unit,
-    modifier: Modifier = Modifier
+    //modifier: Modifier = Modifier
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         if (state.isLoading) {
@@ -331,7 +334,7 @@ private fun PointDialog(
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(signalList ?: emptyList()) { signalData ->
+                items(signalList) { signalData ->
                     SignalItem(
                         detailedSignalData = signalData,
                         modifier = Modifier
@@ -365,18 +368,19 @@ private fun EdgeItem(
 @Composable
 private fun DataItemTest(
     dataItem: LastSignalData,
-    modifier: Modifier = Modifier
+    //modifier: Modifier = Modifier
 ) {
     val marginNormal = dimensionResource(id = R.dimen.margin_normal)
 
-        Text(
-            text = dataItem.type + ":" ?: "No Value",
-            style = MaterialTheme.typography.labelSmall
+    Text(
+        text = (dataItem.type + ":"),
+        style = MaterialTheme.typography.labelSmall
         )
-        Text(
-            text = dataItem.rawValue + " " + dataItem.unit ?: "No Value",
-            Modifier.padding(bottom = marginNormal),
-            style = MaterialTheme.typography.labelSmall
+
+    Text(
+        text = (dataItem.rawValue + " " + dataItem.unit),
+        Modifier.padding(bottom = marginNormal),
+        style = MaterialTheme.typography.labelSmall
         )
 }
 
