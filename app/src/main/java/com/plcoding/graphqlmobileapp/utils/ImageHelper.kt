@@ -17,7 +17,7 @@ class ImageHelper {
     )
 
     fun getSensorImageUrl(sensorType: String): Int {
-        val i = sensorImageUrls.single { it.sensorType == sensorType }
-        return i.sensorImageUrl
+        val i = sensorImageUrls.singleOrNull() { it.sensorType == sensorType }
+        return i?.sensorImageUrl ?: R.drawable.temperaturesensor
     }
 }
