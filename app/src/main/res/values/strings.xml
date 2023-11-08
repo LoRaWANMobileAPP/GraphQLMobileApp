@@ -21,6 +21,6 @@
 
     <string name="img_system_overview">System Overview</string>
     <string name="system_description_heading">System Description</string>
-    <string name="system_description_text">System Description</string>
+    <string name="system_description_text">Welcome to the Realtime LoRaWAN Sensor Data Viewer, a mobile application for instant access to live sensor data transmitted via LoRaWAN technology.\n\nOur app provides a seamless and user-friendly experience for monitoring and analyzing data from a wide range of sensors, including temperature, humidity, and more. With real-time updates, you can stay informed about critical environmental conditions, make data-driven decisions, and take timely actions as needed.\n\nKey Features:\n- Realtime Data\n- Sensor Variety\n- User-Friendly Interface\n- Historical Data\n- Secure and Reliable</string>
 
 </resources>

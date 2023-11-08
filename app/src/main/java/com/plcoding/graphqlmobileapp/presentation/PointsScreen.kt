@@ -368,20 +368,23 @@ private fun EdgeItem(
 @Composable
 private fun DataItemTest(
     dataItem: LastSignalData,
-    //modifier: Modifier = Modifier
+    modifier: Modifier = Modifier
 ) {
-    val marginNormal = dimensionResource(id = R.dimen.margin_normal)
-
-    Text(
-        text = (dataItem.type + ":"),
-        style = MaterialTheme.typography.labelSmall
+    val marginSmall = dimensionResource(id = R.dimen.margin_small)
+    //val marginExtraSmall = dimensionResource(id = R.dimen.margin_extra_small)
+    Column(modifier.fillMaxWidth()) {
+        Text(
+            text = (dataItem.type + ":"),
+            modifier.padding(horizontal = marginSmall),
+            style = MaterialTheme.typography.labelSmall
         )
-
-    Text(
-        text = (dataItem.rawValue + " " + dataItem.unit),
-        Modifier.padding(bottom = marginNormal),
-        style = MaterialTheme.typography.labelSmall
+        Text(
+            text = (dataItem.rawValue + " " + dataItem.unit),
+            modifier.padding(horizontal = marginSmall, vertical = marginSmall),
+            style = MaterialTheme.typography.labelSmall
         )
+    }
+
 }
 
 @Composable

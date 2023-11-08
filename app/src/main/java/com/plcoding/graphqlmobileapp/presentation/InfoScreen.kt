@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,15 +26,13 @@ import com.plcoding.graphqlmobileapp.R
 @Composable
 fun InfoScreen(modifier: Modifier = Modifier){
     val marginNormal = dimensionResource(id = R.dimen.margin_normal)
-    Surface(modifier.fillMaxSize()){
-        Column () {
+
+    LazyColumn (modifier.fillMaxWidth()) {
+        item {
             // System image
-            SystemImage(modifier = modifier, margin = marginNormal)
-
-            // System description
-            //SystemDescription(modifier = modifier)
-
-
+            SystemImage(modifier = modifier, marginNormal = marginNormal)
+        }
+        item{
             Text(
                 text = stringResource(R.string.system_description_heading),
                 modifier
@@ -41,10 +40,12 @@ fun InfoScreen(modifier: Modifier = Modifier){
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center
             )
+        }
+        item{
             Text(
                 text = stringResource(R.string.system_description_text),
                 modifier
-                    .padding(vertical = marginNormal),
+                    .padding(vertical = marginNormal, horizontal = marginNormal),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Justify
             )
@@ -55,36 +56,17 @@ fun InfoScreen(modifier: Modifier = Modifier){
 @Composable
 private fun SystemImage(
     modifier: Modifier = Modifier,
-    margin: Dp
+    marginNormal: Dp
     ){
-    //val marginNormal = dimensionResource(id = R.dimen.margin_normal)
     Image(
         painter = painterResource(id = R.drawable.img_system_overview),
         contentDescription = stringResource(id = R.string.img_system_overview),
-        modifier
-            .padding(vertical = margin),
+        contentScale = ContentScale.FillWidth,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = marginNormal),
         alignment = Alignment.TopCenter
     )
-}
-
-@Composable
-private fun SystemDescription(modifier: Modifier = Modifier){
-    val marginNormal = dimensionResource(id = R.dimen.margin_normal)
-        Text(
-            text = stringResource(R.string.system_description_heading),
-            modifier
-                .padding(vertical = marginNormal),
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = stringResource(R.string.system_description_text),
-            modifier
-                .padding(vertical = marginNormal),
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Justify
-        )
-
 }
 
 @Preview(showSystemUi = true)
