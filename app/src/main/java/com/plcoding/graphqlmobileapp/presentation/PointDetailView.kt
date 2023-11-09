@@ -68,15 +68,13 @@ data class Sensor(
 data class SignalData(
     val rawValue: Double?,
     val numericValue: Double?,
-    // other properties...
+
 )
 @Composable
 fun PointDetailTest(
     modifier: Modifier = Modifier,
     viewModel: PointDetailViewModel = hiltViewModel(),
-   // onPointClick: (SimpleNode) -> Unit,
-    //onSelectPoint: (id: String) -> Unit
-    //onDismissPointDialog: () -> Unit
+
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -96,11 +94,7 @@ fun PointDetailTest(
         viewModel: PointDetailViewModel = hiltViewModel(),
 
         modifier: Modifier = Modifier,
-        //point: DetailedPoint,
-        // signalList: List<DetailedSignalData>,
-        // aggregatedInfo: AggregatedInfo?,
-        //simplePoint: SimplePoint,
-        // simpleNode: SimpleNode
+
 
     ) {
         val state by viewModel.state.collectAsState()
@@ -153,7 +147,7 @@ fun PointDetailTest(
         ) {
             LazyColumn(
 
-                //.fillMaxSize().fillMaxWidth(0.9F)
+
 
 
             ) {
@@ -235,10 +229,7 @@ fun PointDetailTest(
                 }
             }
 
-            //Text(text = "Sensor ID: $sensorId")
 
-//listData(point = DetailedPoint(id = sensorId), signalList =List<DetailedSignalData>() , aggregatedInfo =AggregatedInfo() )
-//listData(point = , signalList = , aggregatedInfo = )
 
             listData(
                 point = state.selectedPoint ?: DetailedPoint(
@@ -261,43 +252,8 @@ fun PointDetailTest(
     }
 
 
-    //@Preview(showSystemUi = true)
-    @Composable
-    fun PointDetailViewPreview(
-        onBackClick: () -> Unit = {},
-        sensorId: String?
 
-    ) {
-        //  PointDetailScreen(onBackClick = onBackClick, sensorId=sensorId)
-    }
 
-    //@Preview
-    @Composable
-    fun PointDetailPreview(
-
-    ) {
-        LazyColumn(
-            modifier = Modifier
-        ) {
-            item {
-                Text(
-                    text = "test",
-                    textAlign = TextAlign.Left
-                )
-
-            }
-
-            item {
-                Surface() {
-                    Text(text = "test")
-                }
-            }
-            item {
-                Text(text = "test")
-            }
-
-        }
-    }
 
     @Composable
     fun listData(
@@ -316,10 +272,7 @@ fun PointDetailTest(
                 println("List printed")
                 println("Aggregated Info: $aggregatedInfo")
                 println("Signal List: $signalList")
-                Text(
-                    text = point.name ?: "No Name",
-                    fontSize = 30.sp
-                )
+
                 Spacer(modifier = Modifier.width(16.dp))
             }
             Spacer(modifier = Modifier.height(16.dp))
