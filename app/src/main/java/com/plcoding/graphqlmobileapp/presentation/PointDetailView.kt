@@ -374,6 +374,16 @@ fun PointDetailTest(
                 fontSize = 15.sp
             )
         }
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Average value: " + aggregatedInfo.avg.toString(),
+                fontSize = 15.sp
+            )
+        }
     }
 
 
