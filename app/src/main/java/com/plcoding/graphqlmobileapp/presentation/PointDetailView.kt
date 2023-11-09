@@ -265,6 +265,7 @@ fun PointDetailTest(
     ) {
         Column(
             modifier = modifier
+                .padding(16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
@@ -282,7 +283,7 @@ fun PointDetailTest(
             Spacer(modifier = Modifier.height(8.dp))
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 if (aggregatedInfo != null) {
                     items(listOf(aggregatedInfo)) {
@@ -295,6 +296,7 @@ fun PointDetailTest(
                     }
                 }
             }
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -346,13 +348,29 @@ fun PointDetailTest(
             println("Aggregated info ")
             println(aggregatedInfo.max.toString())
             Text(
-                text = aggregatedInfo.max.toString(),
+                text ="Max Value: " + aggregatedInfo.max.toString()+"  ",
                 fontSize = 15.sp
 
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = aggregatedInfo.timeOfMax.toString(),
+                text = "Time Of Max: " + aggregatedInfo.timeOfMax.toString(),
+                fontSize = 15.sp
+            )
+        }
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Text(
+                text ="Min Value: " + aggregatedInfo.min.toString()+"  ",
+                fontSize = 15.sp
+
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Time Of Min: " + aggregatedInfo.timeOfMin.toString(),
                 fontSize = 15.sp
             )
         }
