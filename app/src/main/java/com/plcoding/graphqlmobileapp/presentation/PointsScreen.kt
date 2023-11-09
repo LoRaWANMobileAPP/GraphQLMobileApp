@@ -340,10 +340,10 @@ private fun PointDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
-                    )
-                }
-            }
-        }
+        )
+    }
+}
+}
 
     }
 }

@@ -20,6 +20,7 @@ class GetSignalUseCase(
             signalsMap[id] = SignalCache(LocalDateTime.now(), lst)
         } else {
             println("*****2*****")
+            println(id)
             val signalCache = signalsMap[id]
             if (signalCache!!.lastFetch.isBefore(LocalDateTime.now().minusMinutes(10))) {
                 val lst = signalCache!!.signals
@@ -35,6 +36,8 @@ class GetSignalUseCase(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun fetchAndUpdate(id: String): List<DetailedSignalData>? {
+        println("SignalClienttest")
+        println(signalClient.getSignals(id,null, null))
         return signalClient.getSignals(id, null, null)
     }
 }
