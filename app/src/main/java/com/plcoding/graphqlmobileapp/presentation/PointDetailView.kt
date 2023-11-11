@@ -1,7 +1,8 @@
 package com.plcoding.graphqlmobileapp.presentation
 
-import android.graphics.drawable.Drawable
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.activity.compose.ReportDrawn
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,53 +12,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.stringResource
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.apollographql.apollo3.api.BooleanExpression
-
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.plcoding.graphqlmobileapp.R
 import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
-import com.plcoding.graphqlmobileapp.domain.SimpleNode
-import com.plcoding.graphqlmobileapp.domain.SimplePoint
-
 import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.UnitType
-import com.plcoding.graphqlmobileapp.domain.SimpleEdge
 
 data class Sensor(
     val id: String?,
@@ -72,6 +50,7 @@ data class SignalData(
     val numericValue: Double?,
 
 )
+/*
 @Composable
 fun PointDetailTest(
     modifier: Modifier = Modifier,
@@ -89,6 +68,8 @@ fun PointDetailTest(
     )
 
 }
+
+ */
 @Composable
 fun PointDetailScreen(
     onBackClick: () -> Unit,
@@ -141,108 +122,123 @@ fun PointDetailScreen(
             Sensor(sensorId, "Unknown Sensor", "unknown description", 2)
         }
     }
-    LazyColumn(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize()
-            .padding(top = 40.dp)
-    ) {
 
-        item {
-            Column(
-                modifier = modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Surface {
-                    Text(
-                        text = sensorData.name,
-                        style = MaterialTheme.typography.displaySmall,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
+    if (state.isLoading) {
+        Box(modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center)
+            )
         }
-        item {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ){
-                Surface {
-                    Image(
-                        painter = painterResource(sensorData.imageurl), // Replace with your image resource
-                        contentDescription = "My Image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(marginNormal)
-                    )
-                }
-            }
-        }
-        item {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+    } else if (state.point?.edges.isNullOrEmpty()) {
+        EmptyScreen(modifier = modifier)
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+                .padding(top = 40.dp)
+        ) {
+
+            item {
+                Column(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Surface {
+                        Text(
+                            text = sensorData.name,
+                            style = MaterialTheme.typography.displaySmall,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+            }
+            item {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Surface {
+                        Image(
+                            painter = painterResource(sensorData.imageurl), // Replace with your image resource
+                            contentDescription = "My Image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(marginNormal)
+                        )
+                    }
+                }
+            }
+            item {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Surface {
+                        Text(
+                            text = sensorData.description,
+                            style = MaterialTheme.typography.labelSmall,
+                            textAlign = TextAlign.Left,
+                            modifier = Modifier
+                                .padding(horizontal = marginNormal)
+                        )
+                    }
+                }
+            }
+            item {
                 Surface {
                     Text(
-                        text = sensorData.description,
+                        text = "The sensor ID is: ${sensorData.id}",
                         style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.Left,
                         modifier = Modifier
                             .padding(horizontal = marginNormal)
                     )
                 }
             }
-        }
-        item {
-            Surface {
-                Text(
-                    text = "The sensor iD is: ${sensorData.id}",
-                    style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier
-                        .padding(horizontal = marginNormal)
-                )
-            }
-        }
-        item {
-            Surface {
-                Text(
-                    text = "Below are some sensor data: ",
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier
-                        .padding(marginNormal)
-                )
-            }
-        }
-        item {
-            Surface {
-                Column(modifier = modifier.fillMaxWidth()) {
-                    listData(
-                        point = state.selectedPoint ?: DetailedPoint(
-                            "",
-                            "",
-                            "",
-                            null,
-                            "",
-                            UnitType.UNKNOWN,
-                            null,
-                            SignalData(0.0, "", null),
-                        ),
-                        signalList = state.signalList ?: emptyList(),
-                        aggregatedInfo = state.aggregatedInfo,
-                        marginNormal = marginNormal
+            item {
+                Surface {
+                    Text(
+                        text = "Below are some sensor data: ",
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier
+                            .padding(marginNormal)
                     )
                 }
             }
+            item {
+                Surface {
+                    Column(modifier = modifier.fillMaxWidth()) {
+                        listData(
+                            point = state.selectedPoint ?: DetailedPoint(
+                                "",
+                                "",
+                                "",
+                                null,
+                                "",
+                                UnitType.UNKNOWN,
+                                null,
+                                SignalData(0.0, "", null),
+                            ),
+                            signalList = state.signalList ?: emptyList(),
+                            aggregatedInfo = state.aggregatedInfo,
+                            marginNormal = marginNormal
+                        )
+                    }
+                }
 
-        }
-        /*
+            }
+            /*
         item {
 
             //Reserved for input of date.
         }
 
          */
+        }
     }
 }
 
@@ -260,7 +256,7 @@ fun listData(
     Column (
         modifier
             .fillMaxWidth()
-            .padding(marginNormal)
+            .padding(horizontal = marginNormal)
     ){
         Text(
             text = "Last sampling: " + point.timestamp,
@@ -331,6 +327,7 @@ fun SignalItem2(
     aggregatedInfo: AggregatedInfo,
     modifier: Modifier = Modifier
 ) {
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -370,8 +367,24 @@ fun SignalItem2(
     ){
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Average value: " + aggregatedInfo.avg.toString(),
+            //text = "Average value: " + aggregatedInfo.avg.toString().format("%.1f"),
+            text = "Average value: " + String.format("%.1f", aggregatedInfo.avg),
             style = MaterialTheme.typography.labelSmall
+        )
+    }
+}
+@Composable
+private fun EmptyScreen(modifier: Modifier = Modifier){
+    ReportDrawn()
+
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(id = R.string.empty_screen),
+            style = MaterialTheme.typography.headlineSmall
         )
     }
 }

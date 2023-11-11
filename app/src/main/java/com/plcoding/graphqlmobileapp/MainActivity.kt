@@ -9,7 +9,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.plcoding.graphqlmobileapp.compose.LoRaWanApp
 import com.plcoding.graphqlmobileapp.presentation.HomeScreen
 import com.plcoding.graphqlmobileapp.presentation.PointViewModel
-import com.plcoding.graphqlmobileapp.presentation.PointsScreen
 import com.plcoding.graphqlmobileapp.ui.theme.GraphQlMobileAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 

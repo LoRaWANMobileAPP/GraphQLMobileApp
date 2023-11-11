@@ -1,11 +1,8 @@
 package com.plcoding.graphqlmobileapp.presentation
 
-import android.widget.ImageView
 import androidx.activity.compose.ReportDrawn
 import androidx.activity.compose.ReportDrawnWhen
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -18,20 +15,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,32 +31,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.plcoding.graphqlmobileapp.R
 import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
-import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.LastSignalData
 import com.plcoding.graphqlmobileapp.domain.SimpleEdge
 import com.plcoding.graphqlmobileapp.domain.SimpleNode
-import com.plcoding.graphqlmobileapp.ui.theme.GraphQlMobileAppTheme
 import com.plcoding.graphqlmobileapp.utils.ImageHelper
-import com.plcoding.graphqlmobileapp.utils.LoRaWANImage
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
 
 @Composable
 fun PointScreenTest(
@@ -239,6 +219,124 @@ private fun PointsListItem(
     }
 }
 
+
+// EdgeItem -> GardenListItem
+@Composable
+private fun EdgeItem(
+    edge: SimpleEdge,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = edge.node.name ?: "No Name",
+            fontSize = 10.sp
+        )
+    }
+}
+
+@Composable
+private fun DataItemTest(
+    dataItem: LastSignalData,
+    modifier: Modifier = Modifier
+) {
+    val marginSmall = dimensionResource(id = R.dimen.margin_small)
+    val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy, HH:mm:ss")
+    val sdfTest = simpleDateFormat.format(dataItem.time)
+    //var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+
+
+    Column(modifier.fillMaxWidth()) {
+        Text(
+            text = (dataItem.type + ":\n" + dataItem.rawValue + " " + dataItem.unit),
+            modifier.padding(horizontal = marginSmall),
+            style = MaterialTheme.typography.labelSmall
+        )
+        Text(
+            //text = "Last sampling:\n" + (dataItem.time.toLocalDateTime()),
+            text = "Last sampling:\n$sdfTest",
+            modifier.padding(horizontal = marginSmall, vertical = marginSmall),
+            style = MaterialTheme.typography.labelSmall
+        )
+    }
+
+}
+
+@Composable
+private fun DataItem(
+    dataItem: LastSignalData,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = dataItem.rawValue,
+            fontSize = 10.sp
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = dataItem.unit,
+            fontSize = 10.sp
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = dataItem.type,
+            fontSize = 10.sp
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Composable
+private fun SignalItem(
+    detailedSignalData: DetailedSignalData,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = detailedSignalData.signalData.numericValue.toString(),
+            fontSize = 15.sp
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+      /*  Text(
+           text = detailedSignalData.signalData.rawValue,
+            fontSize = 15.sp
+        )
+
+       */
+    }
+}
+
+@Composable
+private fun AggregatedItem(
+    aggregatedInfo: AggregatedInfo,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = aggregatedInfo.max.toString(),
+            fontSize = 15.sp
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = aggregatedInfo.timeOfMax.toString(),
+            fontSize = 15.sp
+        )
+    }
+}
+
+
+/*
 @Composable
 fun PointsScreen(
     state: PointViewModel.PointState,
@@ -349,130 +447,4 @@ private fun PointDialog(
     }
 }
 
-// EdgeItem -> GardenListItem
-@Composable
-private fun EdgeItem(
-    edge: SimpleEdge,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = edge.node.name ?: "No Name",
-            fontSize = 10.sp
-        )
-    }
-}
-
-@Composable
-private fun DataItemTest(
-    dataItem: LastSignalData,
-    modifier: Modifier = Modifier
-) {
-    val marginSmall = dimensionResource(id = R.dimen.margin_small)
-    var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-    //val marginExtraSmall = dimensionResource(id = R.dimen.margin_extra_small)
-    Column(modifier.fillMaxWidth()) {
-        Text(
-            text = (dataItem.type + ":"),
-            modifier.padding(horizontal = marginSmall),
-            style = MaterialTheme.typography.labelSmall
-        )
-        Text(
-            text = (dataItem.rawValue + " " + dataItem.unit),
-            modifier.padding(horizontal = marginSmall, vertical = marginSmall),
-            style = MaterialTheme.typography.labelSmall
-        )
-    }
-
-}
-
-@Composable
-private fun DataItem(
-    dataItem: LastSignalData,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = dataItem.rawValue,
-            fontSize = 10.sp
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = dataItem.unit,
-            fontSize = 10.sp
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = dataItem.type,
-            fontSize = 10.sp
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-    }
-}
-
-@Composable
-private fun SignalItem(
-    detailedSignalData: DetailedSignalData,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = detailedSignalData.signalData.numericValue.toString(),
-            fontSize = 15.sp
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-      /*  Text(
-           text = detailedSignalData.signalData.rawValue,
-            fontSize = 15.sp
-        )
-
-       */
-    }
-}
-
-@Composable
-private fun AggregatedItem(
-    aggregatedInfo: AggregatedInfo,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = aggregatedInfo.max.toString(),
-            fontSize = 15.sp
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = aggregatedInfo.timeOfMax.toString(),
-            fontSize = 15.sp
-        )
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun SignalItemPreview(){
-    GraphQlMobileAppTheme {
-        val viewModel = hiltViewModel<PointViewModel>()
-        val state by viewModel.state.collectAsState()
-        PointsScreen(
-            state = state,
-            onSelectPoint = viewModel::selectPoint,
-            onDismissPointDialog = viewModel::dismissPointDialog
-        )
-    }
-    //SignalItem(detailedSignalData = DetailedSignalData(UnitType.DEGREES, SignalData(10.3, "10.4", time = 2023-10-27)))
-}
-
-
+ */
