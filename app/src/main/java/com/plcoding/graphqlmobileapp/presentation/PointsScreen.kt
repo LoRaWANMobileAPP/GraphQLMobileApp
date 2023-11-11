@@ -65,6 +65,7 @@ import com.plcoding.graphqlmobileapp.domain.SimpleNode
 import com.plcoding.graphqlmobileapp.ui.theme.GraphQlMobileAppTheme
 import com.plcoding.graphqlmobileapp.utils.ImageHelper
 import com.plcoding.graphqlmobileapp.utils.LoRaWANImage
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun PointScreenTest(
@@ -371,6 +372,7 @@ private fun DataItemTest(
     modifier: Modifier = Modifier
 ) {
     val marginSmall = dimensionResource(id = R.dimen.margin_small)
+    var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
     //val marginExtraSmall = dimensionResource(id = R.dimen.margin_extra_small)
     Column(modifier.fillMaxWidth()) {
         Text(
