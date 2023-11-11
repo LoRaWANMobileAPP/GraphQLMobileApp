@@ -5,6 +5,7 @@ import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.UnitType
+import com.plcoding.graphqlmobileapp.utils.Helper.stringToTimestamp
 
 fun SignalsByFilterQuery.Signals.toDetailedSignalData(): List<DetailedSignalData>? {
     return this.edges?.map { edge ->
@@ -14,7 +15,7 @@ fun SignalsByFilterQuery.Signals.toDetailedSignalData(): List<DetailedSignalData
             signalData = SignalData(
                 numericValue = edge.node.data.numericValue,
                 rawValue = edge.node.data.rawValue,
-                time = edge.node.timestamp
+                time = edge.node.timestamp?.let { stringToTimestamp(it.toString()) }
             )
         )
     }

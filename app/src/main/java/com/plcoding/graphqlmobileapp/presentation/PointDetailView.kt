@@ -240,7 +240,7 @@ fun PointDetailTest(
                     "",
                     UnitType.UNKNOWN,
                     null,
-                    SignalData(0.0, "", "")
+                    SignalData(0.0, "", null)
                 ),
                 signalList = state.signalList ?: emptyList(),
                 aggregatedInfo = state.aggregatedInfo

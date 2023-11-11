@@ -12,10 +12,11 @@ import com.plcoding.graphqlmobileapp.domain.SimpleEdge
 import com.plcoding.graphqlmobileapp.domain.SimpleNode
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
 import com.plcoding.graphqlmobileapp.domain.UnitType
-import okhttp3.internal.notifyAll
+import com.plcoding.graphqlmobileapp.utils.Helper.stringToTimestamp
+
 
 fun PointsQuery.Points.toSimplePoints(): SimplePoint {
-    return SimplePoint(
+    val edges = SimplePoint(
         edges = this.edges?.map { edge ->
             SimpleEdge(
                 node = SimpleNode(
@@ -27,17 +28,18 @@ fun PointsQuery.Points.toSimplePoints(): SimplePoint {
                             edge.node.timestamp.toString()
                         }
                         LastSignalData(
-                            time = lastValue.node.timestamp,
+                            time = stringToTimestamp(lastValue.node.timestamp.toString()),
                             rawValue = lastValue.node.data.rawValue,
                             numericValue = lastValue.node.data.numericValue,
                             unit = lastValue.node.unit.name,
                             type = lastValue.node.type
                         )
-                    } ?: emptyList<LastSignalData>()
+                    } ?: emptyList()
                 )
             )
         }
     )
+    return edges
 }
 
 fun PointQuery.Points.toDetailedPoint(): DetailedPoint? {
@@ -59,7 +61,7 @@ fun PointQuery.Points.toDetailedPoint(): DetailedPoint? {
         signalData = SignalData(
             numericValue = node.data.numericValue,
             rawValue = node.data.rawValue,
-            time = node.timestamp
+            time = node.timestamp?.let { stringToTimestamp(it.toString()) }
         )
     )
 }

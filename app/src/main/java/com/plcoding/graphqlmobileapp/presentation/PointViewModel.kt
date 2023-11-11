@@ -52,7 +52,7 @@ class PointViewModel @Inject constructor(
         id: String) {
         viewModelScope.launch {
             _state.update {
-                val signalList = getSignalUseCase.execute(id)
+                val signalList = getSignalUseCase.execute(id, null, null)
                 it.copy(
                     selectedPoint = getPointUseCase.execute(id),
                     signalList = signalList,

@@ -2,6 +2,8 @@ package com.plcoding.graphqlmobileapp.utils
 
 import java.io.File
 import java.io.FileInputStream
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.util.Properties
 
 
@@ -19,5 +21,15 @@ object Helper {
 //            .associateWith {prop.getProperty(it)}
 //            .firstOrNull { println(it) }
         return null
+    }
+
+
+    private const val dimensionFourTimeFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+
+    fun stringToTimestamp(dateString: String): Timestamp {
+        val dateFormat = SimpleDateFormat(dimensionFourTimeFormat)
+        val parsedDate = dateFormat.parse(dateString.replace("T", " ").replace("Z",""))
+
+        return Timestamp(parsedDate.time)
     }
 }

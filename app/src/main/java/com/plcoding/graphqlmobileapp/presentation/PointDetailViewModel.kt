@@ -56,7 +56,7 @@ fun selectPoint()
         val sensorId = sensorId
         val nonNullableSensorId: String = sensorId ?: "2"
         _state.update {
-            val signalList = getSignalUseCase.execute(nonNullableSensorId)
+            val signalList = getSignalUseCase.execute(nonNullableSensorId, null, null)
 
             it.copy(
                 selectedPoint = getPointUseCase.execute(nonNullableSensorId),

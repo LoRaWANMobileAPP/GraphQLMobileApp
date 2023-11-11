@@ -7,6 +7,7 @@ query SignalsByFilter($id: String!, $fromDate: Timestamp!, $toDate: Timestamp!) 
                 {timestamp: {_GT: $fromDate}}
             ]
         }
+        paginate: {last: 1000}
     ){
         edges {
             node {
