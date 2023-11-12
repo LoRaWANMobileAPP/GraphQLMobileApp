@@ -13,7 +13,6 @@ import com.plcoding.graphqlmobileapp.domain.PointClient
 import com.plcoding.graphqlmobileapp.domain.PointSpecification
 import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
-import com.plcoding.graphqlmobileapp.utils.Helper
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.Date

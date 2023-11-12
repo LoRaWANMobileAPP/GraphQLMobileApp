@@ -18,22 +18,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.plcoding.graphqlmobileapp.R
 import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
+
 import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.UnitType
 import com.plcoding.graphqlmobileapp.utils.Helper
@@ -231,8 +241,19 @@ fun PointDetailScreen(
                     }
                 }
 
+        }
+        if (!state.signalList.isNullOrEmpty()) {
+            item {
+                Surface {
+                    Column(modifier = modifier.fillMaxWidth()
+                    ) {
+                        LineChartExample(state.signalList!!, sensorData)
+                    }
+                }
             }
-            /*
+        }
+
+        /*
         item {
 
             //Reserved for input of date.
@@ -342,7 +363,7 @@ fun SignalItem2(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Time Of Max: " + aggregatedInfo.timeOfMax?.let { Helper.eliminateMilisecond(it) },
+            text = "Time: " + aggregatedInfo.timeOfMax?.let { Helper.eliminateMilisecond(it) },
             style = MaterialTheme.typography.labelSmall
         )
     }
@@ -358,7 +379,7 @@ fun SignalItem2(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Time Of Min: " + aggregatedInfo.timeOfMin?.let { Helper.eliminateMilisecond(it) },
+            text = "Time: " + aggregatedInfo.timeOfMin?.let { Helper.eliminateMilisecond(it) },
             style = MaterialTheme.typography.labelSmall
         )
     }
@@ -389,4 +410,28 @@ private fun EmptyScreen(modifier: Modifier = Modifier){
         )
     }
 }
+
+@Composable
+fun LineChartExample(signalList: List<DetailedSignalData>, sensorData: Sensor) {
+    val entries = signalList.mapIndexed { index, detailedSignalData ->
+        Entry(index.toFloat(), (detailedSignalData.signalData.numericValue ?: 0).toFloat())
+    }
+
+    val dataSet = LineDataSet(entries, "Sampled data")
+    dataSet.colors = ColorTemplate.VORDIPLOM_COLORS.toList()
+
+    val lineData = LineData(dataSet)
+
+    AndroidView(
+        factory = { context ->
+            LineChart(context).apply {
+                data = lineData
+                description.text = sensorData.name + "'s data"
+            }
+        },
+        modifier = Modifier.height(200.dp)
+            .fillMaxWidth()
+    )
+}
+
 
