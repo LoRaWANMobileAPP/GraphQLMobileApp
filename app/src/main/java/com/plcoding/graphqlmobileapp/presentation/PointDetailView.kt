@@ -1,9 +1,6 @@
 package com.plcoding.graphqlmobileapp.presentation
 
-import android.graphics.drawable.Drawable
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,51 +10,41 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
-import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.apollographql.apollo3.api.BooleanExpression
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.plcoding.graphqlmobileapp.R
 import com.plcoding.graphqlmobileapp.domain.AggregatedInfo
 import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
-import com.plcoding.graphqlmobileapp.domain.SimpleNode
-import com.plcoding.graphqlmobileapp.domain.SimplePoint
 
 import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.UnitType
-import com.plcoding.graphqlmobileapp.domain.SimpleEdge
 
 data class Sensor(
     val id: String?,
@@ -236,6 +223,17 @@ fun PointDetailScreen(
             }
 
         }
+        if (!state.signalList.isNullOrEmpty()) {
+            item {
+                Surface {
+                    Column(modifier = modifier.fillMaxWidth()
+                    ) {
+                        LineChartExample(state.signalList!!)
+                    }
+                }
+            }
+        }
+
         /*
         item {
 
@@ -244,6 +242,8 @@ fun PointDetailScreen(
 
          */
     }
+
+
 }
 
 
@@ -374,5 +374,28 @@ fun SignalItem2(
             style = MaterialTheme.typography.labelSmall
         )
     }
+}
+
+@Composable
+fun LineChartExample(signalList: List<DetailedSignalData>) {
+    val entries = signalList.mapIndexed { index, detailedSignalData ->
+        Entry(index.toFloat(), (detailedSignalData.signalData.numericValue ?: 0).toFloat())
+    }
+
+    val dataSet = LineDataSet(entries, "Sampled data")
+    dataSet.colors = ColorTemplate.VORDIPLOM_COLORS.toList()
+
+    val lineData = LineData(dataSet)
+
+    AndroidView(
+        factory = { context ->
+            LineChart(context).apply {
+                data = lineData
+                description.text = "My Line Chart"
+            }
+        },
+        modifier = Modifier.height(200.dp)
+            .fillMaxWidth()
+    )
 }
 

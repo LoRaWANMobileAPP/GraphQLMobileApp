@@ -130,6 +130,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("com.github.bumptech.glide:compose:1.0.0-alpha.3")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
     //debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
 
@@ -153,3 +154,4 @@ dependencies {
 
 
 }
+
