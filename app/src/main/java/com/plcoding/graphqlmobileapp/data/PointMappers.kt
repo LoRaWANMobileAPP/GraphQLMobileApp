@@ -49,7 +49,7 @@ fun PointQuery.Points.toDetailedPoint(): DetailedPoint? {
         id = node.point.id,
         name = node.point.name,
         description = node.point.description,
-        timestamp = node.timestamp,
+        timestamp = node.timestamp?.let { stringToTimestamp( node.timestamp.toString()) },
         type = node.type,
         unit = UnitType.safeValueOf(node.unit.rawValue),
         location = node.location?.let {

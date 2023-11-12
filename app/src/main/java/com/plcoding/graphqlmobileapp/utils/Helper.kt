@@ -32,4 +32,9 @@ object Helper {
 
         return Timestamp(parsedDate.time)
     }
+
+    fun eliminateMilisecond(timestamp: Timestamp): String {
+        val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy, HH:mm:ss")
+        return simpleDateFormat.format(timestamp)
+    }
 }

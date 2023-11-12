@@ -36,6 +36,7 @@ import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.SignalData
 import com.plcoding.graphqlmobileapp.domain.UnitType
+import com.plcoding.graphqlmobileapp.utils.Helper
 
 data class Sensor(
     val id: String?,
@@ -335,13 +336,13 @@ fun SignalItem2(
         //println("Aggregated info ")
         //println(aggregatedInfo.max.toString())
         Text(
-            text ="Max Value: " + aggregatedInfo.max.toString()+"  ",
+            text ="Max Value: " + aggregatedInfo.max+"  ",
             style = MaterialTheme.typography.labelSmall
 
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Time Of Max: " + aggregatedInfo.timeOfMax.toString(),
+            text = "Time Of Max: " + aggregatedInfo.timeOfMax?.let { Helper.eliminateMilisecond(it) },
             style = MaterialTheme.typography.labelSmall
         )
     }
@@ -351,13 +352,13 @@ fun SignalItem2(
     ) {
 
         Text(
-            text ="Min Value: " + aggregatedInfo.min.toString()+"  ",
+            text ="Min Value: " + aggregatedInfo.min+"  ",
             style = MaterialTheme.typography.labelSmall
 
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Time Of Min: " + aggregatedInfo.timeOfMin.toString(),
+            text = "Time Of Min: " + aggregatedInfo.timeOfMin?.let { Helper.eliminateMilisecond(it) },
             style = MaterialTheme.typography.labelSmall
         )
     }
