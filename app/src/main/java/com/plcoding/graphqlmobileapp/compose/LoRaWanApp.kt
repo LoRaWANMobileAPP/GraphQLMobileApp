@@ -32,7 +32,7 @@ fun LoRaWanNavHost(
     //val activity = (LocalContext.current as Activity)
     val viewModel = hiltViewModel<PointViewModel>()
     //val state by viewModel.state.collectAsState()
-    val onPointSelect = viewModel::selectPoint
+//    val onPointSelect = viewModel::selectPoint
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             HomeScreen(
@@ -42,7 +42,7 @@ fun LoRaWanNavHost(
                     //only for testing. gathering LoRaWAN sensor ID.
                     //println("Sensor ID: ${it.id}")
                     navController.navigate("sensorDetail/${it.id}")
-                    onPointSelect(it.id)
+//                    onPointSelect(it.id)
                 }
             )
         }

@@ -26,9 +26,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PointViewModel @Inject constructor(
     private val getPointsUseCase: GetPointsUseCase,
-    private val getPointUseCase: GetPointUseCase,
-    private val getSignalUseCase: GetSignalUseCase,
-    private val getAggregatedInfoUseCase: GetAggregatedInfoUseCase
+//    private val getPointUseCase: GetPointUseCase,
+//    private val getSignalUseCase: GetSignalUseCase,
+//    private val getAggregatedInfoUseCase: GetAggregatedInfoUseCase
 ): ViewModel() {
 
     private val _state = MutableStateFlow(PointState())
@@ -48,19 +48,19 @@ class PointViewModel @Inject constructor(
         }
     }
 
-    fun selectPoint(
-        id: String) {
-        viewModelScope.launch {
-            _state.update {
-                val signalList = getSignalUseCase.execute(id, null, null)
-                it.copy(
-                    selectedPoint = getPointUseCase.execute(id),
-                    signalList = signalList,
-                    aggregatedInfo = getAggregatedInfoUseCase.execute(signalList)
-                )
-            }
-        }
-    }
+//    fun selectPoint(
+//        id: String) {
+//        viewModelScope.launch {
+//            _state.update {
+//                val signalList = getSignalUseCase.execute(id, null, null)
+//                it.copy(
+//                    selectedPoint = getPointUseCase.execute(id),
+//                    signalList = signalList,
+//                    aggregatedInfo = getAggregatedInfoUseCase.execute(signalList)
+//                )
+//            }
+//        }
+//    }
 
     fun dismissPointDialog() {
         viewModelScope.launch {

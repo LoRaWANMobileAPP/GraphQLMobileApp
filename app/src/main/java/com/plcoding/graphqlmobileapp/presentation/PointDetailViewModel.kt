@@ -33,7 +33,7 @@ class PointDetailViewModel @Inject constructor(
         sensorId = id
         println("sensorID is:  $sensorId")
     }
-    private val _state = MutableStateFlow(PointViewModel.PointState())
+    private val _state = MutableStateFlow(PointDetailState())
     val state = _state.asStateFlow()
 
     init {
