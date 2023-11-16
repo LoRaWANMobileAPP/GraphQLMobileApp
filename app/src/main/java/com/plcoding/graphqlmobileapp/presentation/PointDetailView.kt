@@ -1,6 +1,5 @@
 package com.plcoding.graphqlmobileapp.presentation
 
-import androidx.activity.compose.ReportDrawn
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -81,8 +79,6 @@ fun PointDetailScreen(
 
     viewModel.sensorId = sensorId
     viewModel.selectPoint()
-    //viewModel.setSensorId(sensorId)
-    //sensorId?.let { viewModel.setSensorId(it) }
 
     val sensorData = when (sensorId) {
         "6505c5094543cbb034793ef2" -> {
@@ -278,23 +274,7 @@ fun PointDetailScreen(
                     }
                 }
 
-//            item {
-//                Surface {
-//                    Column(modifier = modifier.fillMaxWidth()
-//                    ) {
-//                        TableScreen(state.signalList!!)
-//                    }
-//                }
-//            }
             }
-
-            /*
-            item {
-
-                //Reserved for input of date.
-            }
-
-             */
         }
     }
 }
@@ -338,21 +318,6 @@ fun listData(
             )
         }
     }
-    /*
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(signalList) { signalData ->
-                SignalItem2(
-                    detailedSignalData = signalData,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-
-                )
-            }
-
-             */
 }
 
 
@@ -370,12 +335,6 @@ fun SignalItem2(
             fontSize = 15.sp
         )
         Spacer(modifier = Modifier.height(16.dp))
-        /*  Text(
-         text = detailedSignalData.signalData.rawValue,
-          fontSize = 15.sp
-      )
-
-     */
     }
 }
 
@@ -389,8 +348,6 @@ fun AggregatedItem2(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        //println("Aggregated info ")
-        //println(aggregatedInfo.max.toString())
         Text(
             text ="Max Value: " + aggregatedInfo.max+"  ",
             style = MaterialTheme.typography.labelSmall
@@ -430,21 +387,6 @@ fun AggregatedItem2(
         )
     }
 }
-@Composable
-private fun EmptyScreen(modifier: Modifier = Modifier){
-    ReportDrawn()
-
-    Column(
-        modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.empty_screen),
-            style = MaterialTheme.typography.headlineSmall
-        )
-    }
-}
 
 @Composable
 fun LineChartExample(signalList: List<DetailedSignalData>, sensorData: Sensor) {
@@ -467,20 +409,6 @@ fun LineChartExample(signalList: List<DetailedSignalData>, sensorData: Sensor) {
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth()
-    )
-}
-
-@Composable
-fun RowScope.TableCell(
-    text: String,
-    weight: Float
-) {
-    Text(
-        text = text,
-        Modifier
-            .border(1.dp, Color.Black)
-            .weight(weight)
-            .padding(8.dp)
     )
 }
 
@@ -536,39 +464,5 @@ private fun ScrollBoxesSmooth(signalList: List<DetailedSignalData>) {
         }
     }
 }
-
-//@Composable
-//fun TableScreen(signalList: List<DetailedSignalData>) {
-//    // Just a fake data... a Pair of Int and String
-//    val tableData = signalList.mapIndexed { index, item ->
-//        index to item
-//    }
-//    // Each cell of a column must have the same weight.
-//    val column1Weight = .2f // 30%
-//    val column2Weight = .4f // 70%
-//    val column3Weight = .4f // 70%
-//    // The LazyColumn will be our table. Notice the use of the weights below
-//    LazyColumn(Modifier.fillMaxSize().padding(16.dp)) {
-//        // Here is the header
-//        item {
-//            Row(Modifier.background(Color.Gray)) {
-//                TableCell(text = "Row", weight = column1Weight)
-//                TableCell(text = "Time", weight = column2Weight)
-//                TableCell(text = "Value", weight = column3Weight)
-//            }
-//        }
-//
-//        tableData.subList(0, 5).forEach { dataPair ->
-//            item {
-//                Row(Modifier.fillMaxWidth()) {
-//                    TableCell(text = dataPair.first.toString(), weight = column1Weight)
-//                    TableCell(text = dataPair.second.signalData.time?.toString() ?: "", weight = column2Weight)
-//                    TableCell(text = dataPair.second.signalData.numericValue?.toString() ?: "", weight = column2Weight)
-//                }
-//            }
-//        }
-//
-//    }
-//}
 
 

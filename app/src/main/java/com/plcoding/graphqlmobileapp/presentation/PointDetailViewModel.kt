@@ -7,9 +7,7 @@ import com.plcoding.graphqlmobileapp.domain.DetailedPoint
 import com.plcoding.graphqlmobileapp.domain.DetailedSignalData
 import com.plcoding.graphqlmobileapp.domain.GetAggregatedInfoUseCase
 import com.plcoding.graphqlmobileapp.domain.GetPointUseCase
-import com.plcoding.graphqlmobileapp.domain.GetPointsUseCase
 import com.plcoding.graphqlmobileapp.domain.GetSignalUseCase
-import com.plcoding.graphqlmobileapp.domain.SimplePoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,19 +18,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PointDetailViewModel @Inject constructor(
-    private val getPointsUseCase: GetPointsUseCase,
     private val getPointUseCase: GetPointUseCase,
     private val getSignalUseCase: GetSignalUseCase,
     private val getAggregatedInfoUseCase: GetAggregatedInfoUseCase,
 
-    //private val sensorId: String
 ): ViewModel() {
     var sensorId: String? = ""
 
-    fun setSensorIdValue(id: String?) {
-        sensorId = id
-        println("sensorID is:  $sensorId")
-    }
     private val _state = MutableStateFlow(PointDetailState())
     val state = _state.asStateFlow()
 
@@ -41,11 +33,6 @@ class PointDetailViewModel @Inject constructor(
             _state.update {
                 it.copy(isLoading = true)
             }
-//            _state.update {
-//                it.copy(
-//                    isLoading = false
-//                )
-//            }
         }
     }
 fun selectPoint()
