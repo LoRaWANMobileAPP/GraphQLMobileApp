@@ -1,23 +1,31 @@
 package com.plcoding.graphqlmobileapp.presentation
 
 import androidx.activity.compose.ReportDrawn
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
@@ -27,9 +35,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
 import androidx.compose.ui.unit.Dp
@@ -60,7 +71,7 @@ data class SignalData(
     val rawValue: Double?,
     val numericValue: Double?,
 
-)
+    )
 /*
 @Composable
 fun PointDetailTest(
@@ -90,7 +101,7 @@ fun PointDetailScreen(
     modifier: Modifier = Modifier,
 
 
-) {
+    ) {
     val marginNormal = dimensionResource(id = R.dimen.margin_normal)
     val state by viewModel.state.collectAsState()
 
@@ -135,9 +146,10 @@ fun PointDetailScreen(
     }
 
     if (state.isLoading) {
-        Box(modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+        Box(
+            modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
         ) {
             CircularProgressIndicator(
                 modifier = Modifier
@@ -241,25 +253,76 @@ fun PointDetailScreen(
                     }
                 }
 
-        }
-        if (!state.signalList.isNullOrEmpty()) {
-            item {
-                Surface {
-                    Column(modifier = modifier.fillMaxWidth()
-                    ) {
-                        LineChartExample(state.signalList!!, sensorData)
+            }
+            if (!state.signalList.isNullOrEmpty()) {
+                item {
+                    Surface {
+                        Text(
+                            text = "Last day's samples: ",
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier
+                                .padding(marginNormal)
+                        )
                     }
                 }
+
+                item {
+                    Surface(
+                        modifier = Modifier.border(
+                            BorderStroke(1.dp, Color.Black),
+                            shape = MaterialTheme.shapes.medium
+                        )
+                    ) {
+                        Column(modifier = modifier.fillMaxWidth()
+                        ) {
+                            LineChartExample(state.signalList!!, sensorData)
+                        }
+                    }
+                }
+
+                item {
+                    Surface {
+                        Text(
+                            text = "Last 10 samples: ",
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier
+                                .padding(marginNormal)
+                        )
+                    }
+                }
+
+                item {
+                    Surface(
+                        modifier = Modifier.border(
+                            BorderStroke(1.dp, Color.Black),
+                            shape = MaterialTheme.shapes.medium
+                        )
+                    ) {
+                        Column(
+                            modifier = modifier.fillMaxWidth()
+                        ) {
+                            ScrollBoxesSmooth(state.signalList!!)
+                        }
+                    }
+                }
+
+//            item {
+//                Surface {
+//                    Column(modifier = modifier.fillMaxWidth()
+//                    ) {
+//                        TableScreen(state.signalList!!)
+//                    }
+//                }
+//            }
             }
-        }
 
-        /*
-        item {
+            /*
+            item {
 
-            //Reserved for input of date.
-        }
+                //Reserved for input of date.
+            }
 
-         */
+             */
         }
     }
 }
@@ -345,7 +408,7 @@ fun SignalItem2(
 }
 
 @Composable
- fun AggregatedItem2(
+fun AggregatedItem2(
     aggregatedInfo: AggregatedInfo,
     modifier: Modifier = Modifier
 ) {
@@ -429,9 +492,111 @@ fun LineChartExample(signalList: List<DetailedSignalData>, sensorData: Sensor) {
                 description.text = sensorData.name + "'s data"
             }
         },
-        modifier = Modifier.height(200.dp)
+        modifier = Modifier
+            .height(200.dp)
             .fillMaxWidth()
     )
 }
+
+@Composable
+fun RowScope.TableCell(
+    text: String,
+    weight: Float
+) {
+    Text(
+        text = text,
+        Modifier
+            .border(1.dp, Color.Black)
+            .weight(weight)
+            .padding(8.dp)
+    )
+}
+
+@Composable
+private fun ScrollBoxesSmooth(signalList: List<DetailedSignalData>) {
+    // Smoothly scroll 100px on first composition
+    val state = rememberScrollState()
+    LaunchedEffect(Unit) { state.animateScrollTo(100) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .size(200.dp)
+            .padding(horizontal = 8.dp)
+            .verticalScroll(state)
+    ) {
+        val column1Weight = .2f // 30%
+        val column2Weight = .6f // 70%
+        val column3Weight = .2f // 70%
+        Row(Modifier.background(Color.Transparent)) {
+            Text(text = "Row", Modifier.weight(column1Weight),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black)
+            Text(text = "Time", Modifier.weight(column2Weight),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black)
+            Text(text = "Value", Modifier.weight(column3Weight),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black)
+        }
+
+        signalList.subList(0, 10).sortedByDescending { it.signalData.time }.mapIndexed { index, dataPair ->
+            Row(Modifier.fillMaxWidth()) {
+                Text(text = index.toString(), Modifier.weight(column1Weight),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.Black)
+                Text(text = dataPair.signalData.time?.let { Helper.eliminateMilisecond(it) } ?: "", Modifier.weight(column2Weight),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.Black)
+                Text(text = dataPair.signalData.numericValue?.toString() ?: "", Modifier.weight(column3Weight),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.Black)
+
+            }
+
+        }
+    }
+}
+
+//@Composable
+//fun TableScreen(signalList: List<DetailedSignalData>) {
+//    // Just a fake data... a Pair of Int and String
+//    val tableData = signalList.mapIndexed { index, item ->
+//        index to item
+//    }
+//    // Each cell of a column must have the same weight.
+//    val column1Weight = .2f // 30%
+//    val column2Weight = .4f // 70%
+//    val column3Weight = .4f // 70%
+//    // The LazyColumn will be our table. Notice the use of the weights below
+//    LazyColumn(Modifier.fillMaxSize().padding(16.dp)) {
+//        // Here is the header
+//        item {
+//            Row(Modifier.background(Color.Gray)) {
+//                TableCell(text = "Row", weight = column1Weight)
+//                TableCell(text = "Time", weight = column2Weight)
+//                TableCell(text = "Value", weight = column3Weight)
+//            }
+//        }
+//
+//        tableData.subList(0, 5).forEach { dataPair ->
+//            item {
+//                Row(Modifier.fillMaxWidth()) {
+//                    TableCell(text = dataPair.first.toString(), weight = column1Weight)
+//                    TableCell(text = dataPair.second.signalData.time?.toString() ?: "", weight = column2Weight)
+//                    TableCell(text = dataPair.second.signalData.numericValue?.toString() ?: "", weight = column2Weight)
+//                }
+//            }
+//        }
+//
+//    }
+//}
 
 

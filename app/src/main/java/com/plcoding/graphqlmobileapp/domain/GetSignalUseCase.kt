@@ -18,7 +18,7 @@ class GetSignalUseCase(
         val newFromDate = fromDate ?: Timestamp(currentDateTime.time - 86400000)
         val newToDate = toDate ?: Timestamp(currentDateTime.time)
         signalsMap[id] = fetchAndUpdate(signalsMap[id], id, newFromDate, newToDate)
-        return signalsMap[id]!!.signals
+        return signalsMap[id]!!.signals.distinctBy { it.signalData.time }
     }
 
 //    @RequiresApi(Build.VERSION_CODES.O)
