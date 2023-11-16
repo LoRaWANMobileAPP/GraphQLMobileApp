@@ -13,6 +13,7 @@ import com.plcoding.graphqlmobileapp.domain.PointClient
 import com.plcoding.graphqlmobileapp.domain.PointSpecification
 import com.plcoding.graphqlmobileapp.domain.SignalClient
 import com.plcoding.graphqlmobileapp.domain.SimplePoint
+import com.plcoding.graphqlmobileapp.utils.SensorHelper
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.Date
@@ -44,10 +45,8 @@ class ApolloPointClient(
         return points?.toDetailedPoint()
     }
 
-    private suspend fun getRequiredLastParameterToCoverAllSignals(): Int {
-        return getPointSpecification()?.maxBy {
-            it.existingSignalTypes?.size ?: 1
-        }?.existingSignalTypes?.size ?: 1
+    private fun getRequiredLastParameterToCoverAllSignals(): Int {
+        return SensorHelper.getSignalTypeNumber()
     }
 
     override suspend fun getPointSpecification(): List<PointSpecification>? {

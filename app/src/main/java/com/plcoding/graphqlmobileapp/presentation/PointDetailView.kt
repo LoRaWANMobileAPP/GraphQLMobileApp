@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
@@ -67,31 +65,7 @@ data class Sensor(
 
 
 )
-data class SignalData(
-    val rawValue: Double?,
-    val numericValue: Double?,
 
-    )
-/*
-@Composable
-fun PointDetailTest(
-    modifier: Modifier = Modifier,
-    viewModel: PointDetailViewModel = hiltViewModel(),
-
-) {
-    val state by viewModel.state.collectAsState()
-
-    PointScreenTest(
-        state = state,
-        modifier = modifier,
-        // onPointClick = onPointClick
-        //onSelectPoint = onSelectPoint
-        //onDismissPointDialog = onDismissPointDialog
-    )
-
-}
-
- */
 @Composable
 fun PointDetailScreen(
     onBackClick: () -> Unit,
@@ -156,8 +130,6 @@ fun PointDetailScreen(
                     .align(Alignment.Center)
             )
         }
-    } else if (state.point?.edges.isNullOrEmpty()) {
-        EmptyScreen(modifier = modifier)
     } else {
         LazyColumn(
             modifier = Modifier

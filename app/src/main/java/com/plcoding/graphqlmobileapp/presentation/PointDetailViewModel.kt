@@ -41,12 +41,11 @@ class PointDetailViewModel @Inject constructor(
             _state.update {
                 it.copy(isLoading = true)
             }
-            _state.update {
-                it.copy(
-                    point = getPointsUseCase.execute(),
-                    isLoading = false
-                )
-            }
+//            _state.update {
+//                it.copy(
+//                    isLoading = false
+//                )
+//            }
         }
     }
 fun selectPoint()
@@ -61,14 +60,14 @@ fun selectPoint()
             it.copy(
                 selectedPoint = getPointUseCase.execute(nonNullableSensorId),
                 signalList = signalList,
-                aggregatedInfo = getAggregatedInfoUseCase.execute(signalList)
+                aggregatedInfo = getAggregatedInfoUseCase.execute(signalList),
+                isLoading = false
             )
 
         }
     }
 }
     data class PointDetailState(
-        val point: SimplePoint? = null,
         val isLoading: Boolean = false,
         val selectedPoint: DetailedPoint? = null,
         val signalList: List<DetailedSignalData>? = null,
