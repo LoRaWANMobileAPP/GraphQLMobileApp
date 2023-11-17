@@ -14,7 +14,6 @@ import com.plcoding.graphqlmobileapp.domain.SimplePoint
 import com.plcoding.graphqlmobileapp.domain.UnitType
 import com.plcoding.graphqlmobileapp.utils.Helper.stringToTimestamp
 
-
 fun PointsQuery.Points.toSimplePoints(): SimplePoint {
     val edges = SimplePoint(
         edges = this.edges?.map { edge ->
@@ -77,3 +76,5 @@ fun ExistingSignalsSpecificPointQuery.Points.toPointSpecification(): List<PointS
         )
     }
 }
+
+

@@ -355,7 +355,7 @@ fun AggregatedItem2(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Time: " + aggregatedInfo.timeOfMax?.let { Helper.eliminateMilisecond(it) },
+            text = "Time: " + aggregatedInfo.timeOfMax?.let { Helper.eliminateMillisecond(it) },
             style = MaterialTheme.typography.labelSmall
         )
     }
@@ -371,7 +371,7 @@ fun AggregatedItem2(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Time: " + aggregatedInfo.timeOfMin?.let { Helper.eliminateMilisecond(it) },
+            text = "Time: " + aggregatedInfo.timeOfMin?.let { Helper.eliminateMillisecond(it) },
             style = MaterialTheme.typography.labelSmall
         )
     }
@@ -450,7 +450,7 @@ private fun ScrollBoxesSmooth(signalList: List<DetailedSignalData>) {
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Light,
                     color = Color.Black)
-                Text(text = dataPair.signalData.time?.let { Helper.eliminateMilisecond(it) } ?: "", Modifier.weight(column2Weight),
+                Text(text = dataPair.signalData.time?.let { Helper.eliminateMillisecond(it) } ?: "", Modifier.weight(column2Weight),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Light,
                     color = Color.Black)

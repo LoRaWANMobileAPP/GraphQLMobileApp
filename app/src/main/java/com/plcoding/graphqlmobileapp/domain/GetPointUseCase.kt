@@ -7,3 +7,4 @@ class GetPointUseCase(
         return pointClient.getPoint(id)
     }
 }
+

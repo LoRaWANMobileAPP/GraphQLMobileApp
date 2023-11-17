@@ -9,10 +9,7 @@ class GetSignalUseCase(
     private val signalClient: SignalClient
 ) {
 
-//    private val dimensionFourTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-    //TODO need cleanup, add time to filter
     val signalsMap = mutableMapOf<String, SignalCache>()
-//    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun execute(id: String, fromDate: Timestamp?, toDate: Timestamp?): List<DetailedSignalData>? {
         val currentDateTime = Date()
         val newFromDate = fromDate ?: Timestamp(currentDateTime.time - 86400000)
@@ -21,7 +18,6 @@ class GetSignalUseCase(
         return signalsMap[id]!!.signals.distinctBy { it.signalData.time }
     }
 
-//    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun fetchAndUpdate(existedSignalCache: SignalCache?, id: String, fromDate: Timestamp, toDate: Timestamp): SignalCache {
         val signalCache = existedSignalCache ?: SignalCache(signals = mutableListOf())
         val lst = signalCache.signals
@@ -55,3 +51,4 @@ class GetSignalUseCase(
 data class SignalCache(
     val signals: MutableList<DetailedSignalData>
 )
+
