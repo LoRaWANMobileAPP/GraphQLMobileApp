@@ -17,7 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,6 +42,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -64,6 +69,7 @@ data class Sensor(
 
 )
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun PointDetailScreen(
     onBackClick: () -> Unit,
@@ -76,6 +82,10 @@ fun PointDetailScreen(
     ) {
     val marginNormal = dimensionResource(id = R.dimen.margin_normal)
     val state by viewModel.state.collectAsState()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isLoading,
+        onRefresh = viewModel::selectPoint
+    )
 
     viewModel.sensorId = sensorId
     viewModel.selectPoint()
@@ -130,6 +140,7 @@ fun PointDetailScreen(
         LazyColumn(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
+                .pullRefresh(pullRefreshState)
                 .fillMaxSize()
                 .padding(top = 40.dp)
         ) {
