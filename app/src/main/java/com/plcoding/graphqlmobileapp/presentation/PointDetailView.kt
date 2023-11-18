@@ -248,7 +248,7 @@ fun PointDetailScreen(
                 item {
                     Surface(
                         modifier = Modifier.border(
-                            BorderStroke(1.dp, Color.Black),
+                            BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimaryContainer),
                             shape = MaterialTheme.shapes.medium
                         )
                     ) {
@@ -273,7 +273,7 @@ fun PointDetailScreen(
                 item {
                     Surface(
                         modifier = Modifier.border(
-                            BorderStroke(1.dp, Color.Black),
+                            BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimaryContainer),
                             shape = MaterialTheme.shapes.medium
                         )
                     ) {
@@ -361,13 +361,13 @@ fun AggregatedItem2(
     ) {
         Text(
             text ="Max Value: " + aggregatedInfo.max+"  ",
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelMedium
 
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Time: " + aggregatedInfo.timeOfMax?.let { Helper.eliminateMilisecond(it) },
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelMedium
         )
     }
     Row(
@@ -377,13 +377,13 @@ fun AggregatedItem2(
 
         Text(
             text ="Min Value: " + aggregatedInfo.min+"  ",
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelMedium
 
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Time: " + aggregatedInfo.timeOfMin?.let { Helper.eliminateMilisecond(it) },
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelMedium
         )
     }
     Row(
@@ -394,7 +394,7 @@ fun AggregatedItem2(
         Text(
             //text = "Average value: " + aggregatedInfo.avg.toString().format("%.1f"),
             text = "Average value: " + String.format("%.1f", aggregatedInfo.avg),
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelMedium
         )
     }
 }
@@ -429,51 +429,53 @@ private fun ScrollBoxesSmooth(signalList: List<DetailedSignalData>) {
     val state = rememberScrollState()
     LaunchedEffect(Unit) { state.animateScrollTo(100) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .size(200.dp)
-            .padding(horizontal = 8.dp)
-            .verticalScroll(state)
-    ) {
-        val column1Weight = .2f // 30%
-        val column2Weight = .6f // 70%
-        val column3Weight = .2f // 70%
-        Row(Modifier.background(Color.Transparent)) {
-            Text(text = "Row", Modifier.weight(column1Weight),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black)
-            Text(text = "Time", Modifier.weight(column2Weight),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black)
-            Text(text = "Value", Modifier.weight(column3Weight),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black)
-        }
-
-        signalList.subList(0, 10).sortedByDescending { it.signalData.time }.mapIndexed { index, dataPair ->
-            Row(Modifier.fillMaxWidth()) {
-                Text(text = index.toString(), Modifier.weight(column1Weight),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Light,
-                    color = Color.Black)
-                Text(text = dataPair.signalData.time?.let { Helper.eliminateMilisecond(it) } ?: "", Modifier.weight(column2Weight),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Light,
-                    color = Color.Black)
-                Text(text = dataPair.signalData.numericValue?.toString() ?: "", Modifier.weight(column3Weight),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Light,
-                    color = Color.Black)
-
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(200.dp)
+                .padding(horizontal = 8.dp)
+                .verticalScroll(state)
+        ) {
+            val column1Weight = .2f // 30%
+            val column2Weight = .6f // 70%
+            val column3Weight = .2f // 70%
+            Row(Modifier.background(Color.Transparent)) {
+                Text(
+                    text = "Row", Modifier.weight(column1Weight),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Text(
+                    text = "Time", Modifier.weight(column2Weight),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Text(
+                    text = "Value", Modifier.weight(column3Weight),
+                    style = MaterialTheme.typography.titleSmall,
+                )
             }
 
+            signalList.subList(0, 10).sortedByDescending { it.signalData.time }
+                .mapIndexed { index, dataPair ->
+                    Row(Modifier.fillMaxWidth()) {
+                        Text(
+                            text = (index + 1).toString(), Modifier.weight(column1Weight),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                        Text(text = dataPair.signalData.time?.let { Helper.eliminateMilisecond(it) }
+                            ?: "", Modifier.weight(column2Weight),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                        Text(
+                            text = dataPair.signalData.numericValue?.toString() ?: "",
+                            Modifier.weight(column3Weight),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+
+                    }
+
+                }
         }
-    }
+
 }
 
 
