@@ -454,7 +454,7 @@ private fun ScrollBoxesSmooth(signalList: List<DetailedSignalData>) {
                 )
             }
 
-            signalList.subList(0, 10).sortedByDescending { it.signalData.time }
+            signalList.sortedByDescending { it.signalData.time }.subList(0, 10)
                 .mapIndexed { index, dataPair ->
                     Row(Modifier.fillMaxWidth()) {
                         Text(
